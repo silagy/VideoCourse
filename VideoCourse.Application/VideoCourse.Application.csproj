@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VideoCourse.Domain\VideoCourse.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ErrorOr" Version="1.0.1" />
+    <PackageReference Include="MediatR" Version="11.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0-rc.1.22426.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Authentication\Commands" />
+    <Folder Include="Authentication\Common" />
+    <Folder Include="Users\Queries" />
+    <Folder Include="Videos\Queries" />
+  </ItemGroup>
+
+</Project>
