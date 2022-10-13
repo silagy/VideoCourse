@@ -5,7 +5,9 @@ namespace VideoCourse.Domain.ValueObjects;
 
 public sealed class VideoUrl : ValueObject
 {
-    public const int MinLength = 3;
+    private const int MinLength = 3;
+
+    
     private VideoUrl(string value)
     {
         Value = value;

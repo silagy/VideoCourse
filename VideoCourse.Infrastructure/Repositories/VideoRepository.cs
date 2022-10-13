@@ -25,6 +25,15 @@ public class VideoRepository : GenericRepository<Video>, IVideoRepository
         return result;
     }
 
+    public async Task<ErrorOr<Video>> GetByIdWithSections(Guid id)
+    {
+        var result = await _dbContext.Set<Video>()
+            .Include(v => v.Sections)
+            .FirstOrDefaultAsync(v => v.Id == id);
+
+        return result;
+    }
+
     public async Task<IEnumerable<Video>> GetAllVideos()
     {
         // I should implement Dapper here
@@ -34,8 +43,21 @@ public class VideoRepository : GenericRepository<Video>, IVideoRepository
 
     public ErrorOr<Video> Update(Video video)
     {
+        //_dbContext.Set<Video>().Attach(video);
         var result = _dbContext.Set<Video>().Update(video);
         
         return result.Entity;
+    }
+
+    public async Task<ErrorOr<Section>> AddSection(Section section)
+    {
+        var result = await _dbContext.Insert(section);
+        return result;
+    }
+
+    public async Task<ErrorOr<bool>> AddSections(IReadOnlyCollection<Section> sections)
+    {
+        var result = await _dbContext.InsertRange(sections);
+        return result;
     }
 }

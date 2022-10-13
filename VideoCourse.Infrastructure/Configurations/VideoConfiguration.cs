@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ErrorOr;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using VideoCourse.Domain.Entities;
 
@@ -34,11 +35,13 @@ public class VideoConfiguration : IEntityTypeConfiguration<Video>
         });
 
         builder.HasOne<User>(v => v.Creator)
-            .WithOne()
-            .HasForeignKey<Video>(v => v.CreatorId)
+            .WithMany()
+            .HasForeignKey(v => v.CreatorId)
             .IsRequired();
 
-        builder.HasMany<Section>(v => v.Sections);
+        builder.HasMany(v => v.Sections)
+            .WithOne(s => s.Video)
+            .HasForeignKey(s => s.VideoId);
 
         builder.Property(v => v.CreationDate).IsRequired();
         builder.Property(v => v.UpdateDate);

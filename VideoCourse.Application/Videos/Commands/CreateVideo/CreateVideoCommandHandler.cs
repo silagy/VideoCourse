@@ -46,6 +46,7 @@ public class CreateVideoCommandHandler : IRequestHandler<CreateVideoCommand, Err
 
         var url = urlValidator.Value;
         
+        
         // Check if creator exists
         var creator = await _userRepository.GetByIdAsync(request.CreatorId);
         if (creator.IsError)

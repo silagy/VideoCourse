@@ -1,6 +1,7 @@
 ﻿using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace VideoCourse.Api.Controllers;
 
@@ -11,6 +12,10 @@ public class ApiController : ControllerBase
 {
     public IActionResult Problem(List<Error> errors)
     {
+        if (errors.All(error => error.Type == ErrorType.Validation))
+        {
+            return ValidationProblem(errors);
+        }
         var firstError = errors[0];
 
         var statusCode = firstError.Type switch
@@ -27,5 +32,17 @@ public class ApiController : ControllerBase
             statusCode: statusCode,
             title: firstError.Code,
             detail: firstError.Description);
+    }
+
+    private IActionResult ValidationProblem(List<Error> errors)
+    {
+        var modelDictionary = new ModelStateDictionary();
+
+        foreach (var error in errors)
+        {
+            modelDictionary.AddModelError(error.Code, error.Description);
+        }
+
+        return ValidationProblem(modelDictionary);
     }
 }

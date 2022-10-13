@@ -21,4 +21,9 @@ public abstract class Entity
     {
         IsDeleted = true;
     }
+
+    public void UpdateUpdateDate(DateTime updateDate)
+    {
+        UpdateDate = updateDate;
+    }
 }

@@ -30,11 +30,6 @@ public class SectionConfiguration : IEntityTypeConfiguration<Section>
                 .IsRequired();
         });
 
-        builder.HasOne(s => s.Video)
-            .WithOne()
-            .HasForeignKey<Section>(s => s.VideoId)
-            .IsRequired();
-        
         builder.Property(section => section.CreationDate).IsRequired();
         builder.Property(section => section.UpdateDate);
         builder.Property(section => section.IsDeleted).HasDefaultValue(false);
