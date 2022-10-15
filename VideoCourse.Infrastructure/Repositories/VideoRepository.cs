@@ -40,6 +40,20 @@ public class VideoRepository : GenericRepository<Video>, IVideoRepository
         return result;
     }
 
+    public async Task<ErrorOr<Video>> GetByIdWithCreator(Guid id)
+    {
+        Video? result = await _dbContext.Set<Video>()
+            .Include(v => v.Creator)
+            .FirstOrDefaultAsync(v => v.Id == id);
+
+        if (result is null)
+        {
+            return CustomErrors.Entity.EntityNotFound;
+        }
+
+        return result;
+    }
+
     public async Task<IEnumerable<Video>> GetAllVideos()
     {
         // I should implement Dapper here
@@ -67,10 +81,10 @@ public class VideoRepository : GenericRepository<Video>, IVideoRepository
         return result;
     }
 
-    public async Task<ErrorOr<bool>> Remove(Video video)
-    {
-        return await _dbContext.Remove(video);
-    }
+    // public async Task<ErrorOr<bool>> Remove(Video video)
+    // {
+    //     return await _dbContext.Remove(video);
+    // }
 
     public async Task<ErrorOr<Section>> GetSectionById(Guid id)
     {

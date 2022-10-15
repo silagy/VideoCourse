@@ -14,6 +14,9 @@ public class Video : AggregateRoot
     public string? Description { get; private set; }
     public Duration Duration { get; set; }
     public Guid CreatorId { get; private set; }
+
+    public bool IsPublished { get; private set; }
+    public DateTime? PublishedOnUtc { get; set; }
     public User Creator { get; set; } = null!;
     
     // List of sections
@@ -40,8 +43,17 @@ public class Video : AggregateRoot
         Description = description;
         Duration = duration;
         CreatorId = creatorId;
+        IsPublished = false;
         
         RaiseDomainEvent(new VideoCreatedDomainEvent(id));
+    }
+
+    public void PublishVideo(DateTime publishedDate)
+    {
+        IsPublished = true;
+        PublishedOnUtc = publishedDate;
+        
+        RaiseDomainEvent(new PublishedVideoDomainEvent(Id));
     }
 
     public ErrorOr<Section> AddSection(

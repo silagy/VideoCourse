@@ -57,4 +57,17 @@ public class EmailService : IEmailService
         );
         return await SendEmailAsync(emailToSend);
     }
+
+    public async Task<bool> SendPublishedVideoMessage(VideoPublishedEmailMessage messageRequest)
+    {
+        var email = new EmailRequest(
+            emailTo: messageRequest.EmailTo,
+            subject: $"{messageRequest.VideoName} Has been published! 🎉",
+            body: $"Hi {messageRequest.CreatorFullName}" +
+                  Environment.NewLine +
+                  $"The video '{messageRequest.VideoName}' has been published and it is now ready for learners"
+        );
+
+        return await SendEmailAsync(email);
+    }
 }

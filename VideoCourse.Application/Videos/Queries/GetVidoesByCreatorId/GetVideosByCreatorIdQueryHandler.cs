@@ -25,6 +25,8 @@ public class GetVideosByCreatorIdQueryHandler : IRequestHandler<GetVideosByCreat
             v.Description,
             v.Duration.Value,
             v.CreatorId,
+            v.IsPublished,
+            v.PublishedOnUtc,
             v.CreationDate,
             v.UpdateDate));
 

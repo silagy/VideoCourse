@@ -4,6 +4,7 @@ using VideoCourse.Application.Videos.Commands.CreateSection;
 using VideoCourse.Application.Videos.Commands.CreateVideo;
 using VideoCourse.Application.Videos.Commands.DeleteSection;
 using VideoCourse.Application.Videos.Commands.DeleteVideo;
+using VideoCourse.Application.Videos.Commands.PublishVideoCommand;
 using VideoCourse.Application.Videos.Queries.GetVideosWithSection;
 using VideoCourse.Application.Videos.Queries.GetVidoesByCreatorId;
 
@@ -84,4 +85,15 @@ public class VideosController : ApiController
 
         return Ok(response);
     }
+
+    [HttpGet]
+    [Route("publish/{id:Guid}")]
+    public async Task<IActionResult> PublishVideo(Guid id)
+    {
+        var request = new PublishVideoCommand(id);
+        var response = await _sender.Send(request);
+
+        return NoContent();
+    }
+    
 }

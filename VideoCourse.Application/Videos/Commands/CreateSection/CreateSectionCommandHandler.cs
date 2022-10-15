@@ -12,16 +12,14 @@ namespace VideoCourse.Application.Videos.Commands.CreateSection;
 public class CreateSectionCommandHandler : IRequestHandler<CreateSectionCommand, ErrorOr<VideoResponse>>
 {
     private readonly IVideoRepository _videoRepository;
-    private readonly ISectionRepository _sectionRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IDateTime _dateTimeProvider;
 
-    public CreateSectionCommandHandler(IVideoRepository videoRepository, IUnitOfWork unitOfWork, IDateTime dateTimeProvider, ISectionRepository sectionRepository)
+    public CreateSectionCommandHandler(IVideoRepository videoRepository, IUnitOfWork unitOfWork, IDateTime dateTimeProvider)
     {
         _videoRepository = videoRepository;
         _unitOfWork = unitOfWork;
         _dateTimeProvider = dateTimeProvider;
-        _sectionRepository = sectionRepository;
     }
 
     public async Task<ErrorOr<VideoResponse>> Handle(CreateSectionCommand request, CancellationToken cancellationToken)

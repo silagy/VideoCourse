@@ -7,5 +7,7 @@ public record BasicVideoResponse(
     string? Description,
     int Duration,
     Guid CreatorId,
+    bool IsPublished,
+    DateTime? PublishedDate,
     DateTime CreationDate,
     DateTime UpdateDate);

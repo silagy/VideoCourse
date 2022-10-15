@@ -78,6 +78,8 @@ public class CreateVideoCommandHandler : IRequestHandler<CreateVideoCommand, Err
             video.Description,
             video.Duration.Value,
             video.CreatorId,
+            video.IsPublished,
+            video.PublishedOnUtc,
             video.CreationDate,
             video.UpdateDate
         );

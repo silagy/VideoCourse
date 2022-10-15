@@ -75,7 +75,6 @@ public static class DependencyInjection
        
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IVideoRepository, VideoRepository>();
-        services.AddScoped<ISectionRepository, SectionRepository>();
 
         services.AddAuth(configuration);
         return services;

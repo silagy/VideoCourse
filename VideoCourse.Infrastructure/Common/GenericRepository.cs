@@ -2,11 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using VideoCourse.Application.Core.Abstractions.Data;
 using VideoCourse.Domain.Entities;
+using VideoCourse.Infrastructure.Specifications;
 
 namespace VideoCourse.Infrastructure.Common;
 
-public class GenericRepository<T> : IRepository<T>
-where T : Entity
+public abstract class GenericRepository<T> : IRepository<T>
+where T : AggregateRoot
 {
     protected readonly IDbContext _dbContext;
 
@@ -16,10 +17,10 @@ where T : Entity
     }
 
 
-    public bool Remove(T entity)
+    public Task<bool> Remove(T entity)
     {
         _dbContext.Remove(entity);
-        return true;
+        return Task.FromResult(true);
     }
 
     public async Task<ErrorOr<T>> Add(T entity)
@@ -31,5 +32,14 @@ where T : Entity
     public async Task<IEnumerable<T>> All()
     {
         return await _dbContext.Set<T>().ToListAsync();
+    }
+
+    public async Task<IEnumerable<TEntity>> GetRecordsWithSpecification<TEntity>(ISpecification<TEntity> specification) where TEntity : Entity
+    {
+        var results = await _dbContext.Set<TEntity>()
+            .Where(specification.ToExpression())
+            .ToListAsync();
+
+        return results;
     }
 }

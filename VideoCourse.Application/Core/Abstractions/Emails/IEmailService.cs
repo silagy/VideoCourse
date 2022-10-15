@@ -6,4 +6,5 @@ public interface IEmailService
 {
     public Task<bool> SendEmailAsync(IEmailRequest emailMessage);
     public Task<bool> SendWelcomeMessage(WelcomeEmailMessage message);
+    public Task<bool> SendPublishedVideoMessage(VideoPublishedEmailMessage messageRequest);
 }

@@ -47,6 +47,9 @@ public class VideoConfiguration : IEntityTypeConfiguration<Video>
         builder.Property(v => v.UpdateDate);
         builder.Property(v => v.IsDeleted).HasDefaultValue(false);
 
+        builder.Property(v => v.IsPublished).HasDefaultValue(false);
+        builder.Property(v => v.PublishedOnUtc);
+
         builder.HasQueryFilter(v => !v.IsDeleted);
     }
 }
