@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Polly;
+using Polly.Retry;
 using Quartz;
 using VideoCourse.Application.Core.Abstractions.Common;
 using VideoCourse.Domain.Abstractions;
@@ -46,7 +48,14 @@ public class ProcessOutboxMessages : IJob
                     continue;
                 }
 
-                await _publisher.Publish(domainEvent, context.CancellationToken);
+                AsyncRetryPolicy policy = Policy
+                    .Handle<Exception>()
+                    .WaitAndRetryAsync(3, attampt => TimeSpan.FromSeconds(50 * attampt));
+
+                PolicyResult policyResult = await policy.ExecuteAndCaptureAsync(() =>
+                    _publisher.Publish(domainEvent, context.CancellationToken));
+
+                message.Error = policyResult.FinalException?.ToString();
                 message.PublishedOnUtc = _dateTimeProvider.UtcNow;
             }
             catch (Exception e)

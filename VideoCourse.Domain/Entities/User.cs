@@ -35,6 +35,6 @@ public class User : AggregateRoot
         Password = password;
         RoleId = (int)role;
         
-        RaiseDomainEvent(new CreateUserDomainEvent(id));
+        RaiseDomainEvent(new UserCreatedDomainEvent(id));
     }
 }

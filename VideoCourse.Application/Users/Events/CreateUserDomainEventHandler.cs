@@ -6,7 +6,7 @@ using VideoCourse.Domain.Events;
 
 namespace VideoCourse.Application.Users.Events;
 
-public class CreateUserDomainEventHandler : INotificationHandler<CreateUserDomainEvent>
+public class CreateUserDomainEventHandler : INotificationHandler<UserCreatedDomainEvent>
 {
     private readonly IEmailService _emailService;
     private readonly IUserRepository _userRepository;
@@ -17,7 +17,7 @@ public class CreateUserDomainEventHandler : INotificationHandler<CreateUserDomai
         _userRepository = userRepository;
     }
 
-    public async Task Handle(CreateUserDomainEvent notification, CancellationToken cancellationToken)
+    public async Task Handle(UserCreatedDomainEvent notification, CancellationToken cancellationToken)
     {
         // Get the user from DB
         var userResponse = await _userRepository.GetByIdAsync(notification.UserId);

@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
 using VideoCourse.Domain.DomainErrors;
+using VideoCourse.Domain.Events;
 using VideoCourse.Domain.Primitives;
 using VideoCourse.Domain.ValueObjects;
 
@@ -39,6 +40,8 @@ public class Video : AggregateRoot
         Description = description;
         Duration = duration;
         CreatorId = creatorId;
+        
+        RaiseDomainEvent(new VideoCreatedDomainEvent(id));
     }
 
     public ErrorOr<Section> AddSection(

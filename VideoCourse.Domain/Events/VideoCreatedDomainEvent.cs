@@ -2,4 +2,4 @@
 
 namespace VideoCourse.Domain.Events;
 
-public record CreateUserDomainEvent(Guid UserId): IDomainEvent;
+public record VideoCreatedDomainEvent(Guid Id) : IDomainEvent;
