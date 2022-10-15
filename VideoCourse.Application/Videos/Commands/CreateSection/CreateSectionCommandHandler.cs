@@ -52,7 +52,6 @@ public class CreateSectionCommandHandler : IRequestHandler<CreateSectionCommand,
             return videoResult.Errors;
         }
         
-
         var video = videoResult.Value;
         
         // Create Section

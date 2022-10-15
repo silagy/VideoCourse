@@ -30,6 +30,11 @@ public class AppDbContext : DbContext, IDbContext, IUnitOfWork
         return base.Set<TEntity>();
     }
 
+    public DbSet<TEntity> SetNoEntity<TEntity>() where TEntity : class
+    {
+        return base.Set<TEntity>();
+    }
+
     public async Task<ErrorOr<TEntity>> GetByIdAsync<TEntity>(Guid id) 
         where TEntity : Entity
     {
@@ -41,13 +46,13 @@ public class AppDbContext : DbContext, IDbContext, IUnitOfWork
     public async Task<ErrorOr<TEntity>> Insert<TEntity>(TEntity entity) where TEntity : Entity
     {
         var entry = await Set<TEntity>().AddAsync(entity);
-        return entry.Entity;
+        return entity;
     }
 
     public async Task<ErrorOr<bool>> Remove<TEntity>(TEntity entity) where TEntity : Entity
     {
         var entry = Set<TEntity>().Remove(entity);
-        return entry.State == EntityState.Modified;
+        return true;
     }
 
     public async Task<ErrorOr<bool>> InsertRange<TEntity>(IReadOnlyCollection<TEntity> entities) where TEntity : Entity

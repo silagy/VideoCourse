@@ -6,14 +6,19 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Quartz;
 using VideoCourse.Application.Core.Abstractions.Authentication;
 using VideoCourse.Application.Core.Abstractions.Common;
 using VideoCourse.Application.Core.Abstractions.Cryptography;
 using VideoCourse.Application.Core.Abstractions.Data;
+using VideoCourse.Application.Core.Abstractions.Emails;
 using VideoCourse.Application.Core.Abstractions.Repositories;
+using VideoCourse.Infrastructure.BackgroundJobs;
 using VideoCourse.Infrastructure.Common;
 using VideoCourse.Infrastructure.Common.Cryptography;
+using VideoCourse.Infrastructure.Interceptors;
 using VideoCourse.Infrastructure.Repositories;
+using VideoCourse.Infrastructure.Services.Emails;
 
 namespace VideoCourse.Infrastructure;
 
@@ -22,10 +27,38 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         string connectionString = configuration.GetConnectionString("Default");
-        
-        services.AddDbContext<AppDbContext>(options =>
+        services.AddSingleton<UpdateAuditableEntityInterceptor>();
+        services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
+        services.AddSingleton<SoftDeletedEntityInterceptor>();
+
+        services.AddQuartz(configuration =>
         {
-            options.UseNpgsql(connectionString);
+            var jobkey = new JobKey(nameof(ProcessOutboxMessages));
+
+            configuration
+                .AddJob<ProcessOutboxMessages>(jobkey)
+                .AddTrigger(trigger =>
+                    trigger.ForJob(jobkey)
+                        .WithSimpleSchedule(
+                            schedule =>
+                                schedule.WithIntervalInSeconds(10)
+                                    .RepeatForever()));
+
+            configuration.UseMicrosoftDependencyInjectionJobFactory();
+        });
+
+        services.AddQuartzHostedService();
+        
+        services.AddDbContext<AppDbContext>((sp, options) =>
+        {
+            var AuditableEntityInterceptor = sp.GetService<UpdateAuditableEntityInterceptor>();
+            var ConvertDomainEventsToOutboxMessagesInterceptor =
+                sp.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
+            var SoftDeleteEntitiesInterceptor = sp.GetService<SoftDeletedEntityInterceptor>();
+            options.UseNpgsql(connectionString)
+                .AddInterceptors(AuditableEntityInterceptor)
+                .AddInterceptors(ConvertDomainEventsToOutboxMessagesInterceptor)
+                .AddInterceptors(SoftDeleteEntitiesInterceptor);
         });
         
         services.AddScoped<IDbContext>(serviceProvider => serviceProvider.GetService<AppDbContext>());
@@ -33,6 +66,7 @@ public static class DependencyInjection
         services.AddTransient<IPasswordHasher, PasswordHasher>();
         services.AddTransient<IPasswordHashChecker, PasswordHasher>();
         services.AddTransient<IDateTime, DateTimeProvider>();
+        services.AddScoped<IEmailService, EmailService>();
        
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IVideoRepository, VideoRepository>();

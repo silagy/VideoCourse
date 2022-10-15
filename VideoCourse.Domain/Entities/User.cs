@@ -1,4 +1,5 @@
 ﻿using VideoCourse.Domain.Enums;
+using VideoCourse.Domain.Events;
 using VideoCourse.Domain.ValueObjects;
 
 namespace VideoCourse.Domain.Entities;
@@ -33,5 +34,7 @@ public class User : AggregateRoot
         Email = email;
         Password = password;
         RoleId = (int)role;
+        
+        RaiseDomainEvent(new CreateUserDomainEvent(id));
     }
 }

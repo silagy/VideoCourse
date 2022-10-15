@@ -10,6 +10,9 @@ public interface IDbContext
     DbSet<TEntity> Set<TEntity>()
         where TEntity: Entity;
 
+    DbSet<TEntity> SetNoEntity<TEntity>()
+        where TEntity : class;
+
     Task<ErrorOr<TEntity>> GetByIdAsync<TEntity>(Guid id)
         where TEntity : Entity;
 

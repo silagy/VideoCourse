@@ -6,6 +6,9 @@ public static class ValidationErrors
 {
     public static class Video
     {
+        public static Error IdIsRequired => Error.Validation(
+            code: "Video.IdIsRequired",
+            description: " Video Id is required");
         public static Error NameIsRequired => Error.Validation(
             code: "Video.NameIsRequired",
             description: " Video name is required");
@@ -37,6 +40,10 @@ public static class ValidationErrors
     
     public static class Section
     {
+        
+        public static Error IdIsRequired => Error.Validation(
+            code: "Section.IdIsRequired",
+            description: " Section Id is required");
         public static Error NameIsRequired => Error.Validation(
             code: "Section.NameIsRequired",
             description: " Section name is required");

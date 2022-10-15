@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using VideoCourse.Application.Core.Abstractions.Data;
 using VideoCourse.Application.Core.Abstractions.Repositories;
+using VideoCourse.Domain.DomainErrors;
 using VideoCourse.Domain.Entities;
 using VideoCourse.Infrastructure.Common;
 
@@ -15,13 +16,17 @@ public class VideoRepository : GenericRepository<Video>, IVideoRepository
 
     public async Task<ErrorOr<Video>> Create(Video video)
     {
-        var result = await _dbContext.Insert(video);
-        return result;
+        _dbContext.Insert(video);
+        return video;
     }
 
     public async Task<ErrorOr<Video>> GetById(Guid id)
     {
         var result = await _dbContext.GetByIdAsync<Video>(id);
+        if (result.Value is null)
+        {
+            return CustomErrors.Entity.EntityNotFound;
+        }
         return result;
     }
 
@@ -51,13 +56,38 @@ public class VideoRepository : GenericRepository<Video>, IVideoRepository
 
     public async Task<ErrorOr<Section>> AddSection(Section section)
     {
-        var result = await _dbContext.Insert(section);
-        return result;
+        _dbContext.Insert(section);
+        return section;
     }
 
     public async Task<ErrorOr<bool>> AddSections(IReadOnlyCollection<Section> sections)
     {
         var result = await _dbContext.InsertRange(sections);
         return result;
+    }
+
+    public async Task<ErrorOr<bool>> Remove(Video video)
+    {
+        return await _dbContext.Remove(video);
+    }
+
+    public async Task<ErrorOr<Section>> GetSectionById(Guid id)
+    {
+        var result = await _dbContext.GetByIdAsync<Section>(id);
+
+        if (result.IsError)
+        {
+            return result.Errors;
+        }else if (result.Value is null)
+        {
+            return CustomErrors.Entity.EntityNotFound;
+        }
+
+        return result.Value;
+    }
+
+    public async Task<ErrorOr<bool>> RemoveSection(Section section)
+    {
+        return await _dbContext.Remove(section);
     }
 }

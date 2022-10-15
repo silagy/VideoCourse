@@ -1,11 +1,13 @@
-﻿namespace VideoCourse.Domain.Entities;
+﻿using VideoCourse.Domain.Primitives;
 
-public abstract class Entity
+namespace VideoCourse.Domain.Entities;
+
+public abstract class Entity: IAuditableEntity, ISoftDeleteEntity
 {
     public Guid Id { get; private set; }
-    public bool IsDeleted { get; private set; }
-    public DateTime CreationDate { get; private set; }
-    public DateTime UpdateDate { get; private set; }
+    public bool IsDeleted { get; set; }
+    public DateTime CreationDate { get; set; }
+    public DateTime UpdateDate { get; set; }
     public Entity(Guid id, DateTime creationDate, DateTime updateDate)
     {
         Id = id;
@@ -26,4 +28,6 @@ public abstract class Entity
     {
         UpdateDate = updateDate;
     }
+
+    
 }

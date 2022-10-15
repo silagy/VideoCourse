@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ErrorOr;
+using Microsoft.EntityFrameworkCore;
 using VideoCourse.Application.Core.Abstractions.Data;
 using VideoCourse.Domain.Entities;
 
@@ -21,10 +22,10 @@ where T : Entity
         return true;
     }
 
-    public async Task<T> Add(T entity)
+    public async Task<ErrorOr<T>> Add(T entity)
     {
-        await _dbContext.Insert(entity);
-        return entity;
+        var result = await _dbContext.Insert(entity);
+        return result;
     }
 
     public async Task<IEnumerable<T>> All()

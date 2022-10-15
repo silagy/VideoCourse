@@ -24,7 +24,8 @@ public class UserRepository: GenericRepository<User>, IUserRepository
             return CustomErrors.User.UserExists;
         }
         // Create user
-        return await _dbContext.Insert(user);
+        _dbContext.Insert(user);
+        return user;
     }
 
     public Task<ErrorOr<User>> GetByIdAsync(Guid id)

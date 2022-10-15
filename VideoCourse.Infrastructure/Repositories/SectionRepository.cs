@@ -14,7 +14,7 @@ public class SectionRepository : GenericRepository<Section>, ISectionRepository
 
     public async Task<ErrorOr<Section>> InsertSection(Section section)
     {
-        var result = await _dbContext.Insert(section);
-        return result;
+        _dbContext.Insert(section);
+        return section;
     }
 }

@@ -12,4 +12,9 @@ public interface IVideoRepository
     ErrorOr<Video> Update(Video video);
     Task<ErrorOr<Section>> AddSection(Section section);
     Task<ErrorOr<bool>> AddSections(IReadOnlyCollection<Section> sections);
+
+    Task<ErrorOr<bool>> Remove(Video video);
+
+    Task<ErrorOr<Section>> GetSectionById(Guid id);
+    Task<ErrorOr<bool>> RemoveSection(Section section);
 }
