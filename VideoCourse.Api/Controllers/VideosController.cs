@@ -5,6 +5,7 @@ using VideoCourse.Application.Videos.Commands.CreateVideo;
 using VideoCourse.Application.Videos.Commands.DeleteSection;
 using VideoCourse.Application.Videos.Commands.DeleteVideo;
 using VideoCourse.Application.Videos.Queries.GetVideosWithSection;
+using VideoCourse.Application.Videos.Queries.GetVidoesByCreatorId;
 
 namespace VideoCourse.Api.Controllers;
 
@@ -72,5 +73,15 @@ public class VideosController : ApiController
         return result.Match(
             section => NoContent(),
             errors => Problem(errors));
+    }
+
+    [HttpGet]
+    [Route("GetVideosByCreatorId/{id:Guid}")]
+    public async Task<IActionResult> GetVideosByCreatorId(Guid id)
+    {
+        var request = new GetVideosByCreatorIdQuery(id);
+        var response = await _sender.Send(request);
+
+        return Ok(response);
     }
 }

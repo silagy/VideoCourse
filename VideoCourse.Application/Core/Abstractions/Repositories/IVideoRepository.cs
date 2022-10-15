@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using VideoCourse.Application.Videos.Common;
 using VideoCourse.Domain.Entities;
 
 namespace VideoCourse.Application.Core.Abstractions.Repositories;
@@ -17,4 +18,6 @@ public interface IVideoRepository
 
     Task<ErrorOr<Section>> GetSectionById(Guid id);
     Task<ErrorOr<bool>> RemoveSection(Section section);
+
+    Task<IEnumerable<Video>> GetVideosByCreatorId(Guid id);
 }

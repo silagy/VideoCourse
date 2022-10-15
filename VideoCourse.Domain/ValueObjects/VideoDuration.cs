@@ -29,5 +29,12 @@ public sealed class Duration : ValueObject
         return new Duration(value);
     }
 
+    public static ErrorOr<Duration> Create(string value)
+    {
+        int duration = int.Parse(value);
+
+        return Create(duration);
+    }
+
     public static implicit operator int(Duration duration) => duration.Value;
 }

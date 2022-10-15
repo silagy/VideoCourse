@@ -10,5 +10,12 @@ public static class QueriesRepository
         FROM ""Users""
         WHERE ""IsDeleted"" = false AND ""Email"" = @Email";
     }
+
+    public static class Videos
+    {
+        public static string GetVideosByCreatorId => @"SELECT ""Id"", ""Url"", ""Name"", ""Description"", ""Duration"", ""CreatorId"", ""IsDeleted"", ""CreationDate"", ""UpdateDate""
+        FROM public.""Videos""
+        WHERE ""CreatorId"" = @CreatorId";
+    }
     
 }

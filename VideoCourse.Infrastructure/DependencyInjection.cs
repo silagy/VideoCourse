@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.Text;
+using Dapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -16,6 +17,7 @@ using VideoCourse.Application.Core.Abstractions.Repositories;
 using VideoCourse.Infrastructure.BackgroundJobs;
 using VideoCourse.Infrastructure.Common;
 using VideoCourse.Infrastructure.Common.Cryptography;
+using VideoCourse.Infrastructure.Common.DapperSqlCasting;
 using VideoCourse.Infrastructure.Interceptors;
 using VideoCourse.Infrastructure.Repositories;
 using VideoCourse.Infrastructure.Services.Emails;
@@ -30,6 +32,9 @@ public static class DependencyInjection
         services.AddSingleton<UpdateAuditableEntityInterceptor>();
         services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
         services.AddSingleton<SoftDeletedEntityInterceptor>();
+        
+        SqlMapper.AddTypeHandler(new VideoUrlHandler());
+        SqlMapper.AddTypeHandler(new DurationHandler());
 
         services.AddQuartz(configuration =>
         {

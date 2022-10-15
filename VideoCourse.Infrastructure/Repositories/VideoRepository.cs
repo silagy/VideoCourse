@@ -5,6 +5,7 @@ using VideoCourse.Application.Core.Abstractions.Repositories;
 using VideoCourse.Domain.DomainErrors;
 using VideoCourse.Domain.Entities;
 using VideoCourse.Infrastructure.Common;
+using VideoCourse.Infrastructure.Common.Queries;
 
 namespace VideoCourse.Infrastructure.Repositories;
 
@@ -89,5 +90,14 @@ public class VideoRepository : GenericRepository<Video>, IVideoRepository
     public async Task<ErrorOr<bool>> RemoveSection(Section section)
     {
         return await _dbContext.Remove(section);
+    }
+
+    public async Task<IEnumerable<Video>> GetVideosByCreatorId(Guid id)
+    {
+        var results = await _dbContext.GetRecordsUsingRawSqlAsync<Video>(
+            query: QueriesRepository.Videos.GetVideosByCreatorId,
+            parameters: new { CreatorId = id });
+
+        return results;
     }
 }

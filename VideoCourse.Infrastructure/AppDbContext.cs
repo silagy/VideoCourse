@@ -74,6 +74,7 @@ public class AppDbContext : DbContext, IDbContext, IUnitOfWork
                 sql: query,
                 param: parameters,
                 commandType: CommandType.Text);
+            
 
             return results;
 
