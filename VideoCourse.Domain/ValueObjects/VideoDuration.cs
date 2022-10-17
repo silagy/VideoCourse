@@ -22,8 +22,8 @@ public sealed class Duration : ValueObject
         if (value < MinDuration)
         {
             return Error.Validation(
-                code: "Video.DurationIsNotPositive",
-                description: $"Video duration max be greater than {MinDuration}");
+                code: "Duration.IsNotPositive",
+                description: $"The duration max be greater than {MinDuration}");
         }
 
         return new Duration(value);

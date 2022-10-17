@@ -8,11 +8,9 @@ public abstract class Entity: IAuditableEntity, ISoftDeleteEntity
     public bool IsDeleted { get; set; }
     public DateTime CreationDate { get; set; }
     public DateTime UpdateDate { get; set; }
-    public Entity(Guid id, DateTime creationDate, DateTime updateDate)
+    public Entity(Guid id)
     {
         Id = id;
-        CreationDate = creationDate;
-        UpdateDate = updateDate;
         IsDeleted = false;
     }
 

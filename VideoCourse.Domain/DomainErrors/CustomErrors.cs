@@ -40,5 +40,17 @@ public static class CustomErrors
         public static Error SectionStartTimeMustBeSequential => Error.Conflict(
             code: "Section.StartTimeMustBeSequential",
             description:"Section start time must be sequential, make sure you create the sections in sequential manner");
+        
+        public static Error CreatorNotFound => Error.NotFound(
+            code: "Video.CreatorNotFound",
+            description: "Creator not found");
+
+        public static Error ItemExistsOnThatTime => Error.Failure(
+            code: "Item.ExistsOnTheSameTime",
+            description: "There is another item on the same time, please select another time");
+
+        public static Error ItemIsGreaterThanVideoDuration => Error.Failure(
+            code: "Item.IsGreaterThanVideoDuration",
+            description: "Item cannot be greater than the video duration");
     }
 }

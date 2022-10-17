@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dapper;
+using Microsoft.EntityFrameworkCore;
 using VideoCourse.Domain.Entities;
 using ErrorOr;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -32,4 +33,5 @@ public interface IDbContext
     Task<ErrorOr<TEntity>> GetFirstUsingRawSqlAsync<TEntity>(string query, object parameters);
 
     Task<int> ExecuteSqlAsync(string query, object parameters);
+    Task<SqlMapper.GridReader> GetRecordUsingMultipleQueries(string query, object param);
 }

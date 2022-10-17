@@ -21,10 +21,8 @@ public class Section : Entity
         string? description,
         Duration startTime,
         Duration endTime,
-        Guid videoId,
-        DateTime creationDate,
-        DateTime updateDate) 
-        : base(id, creationDate, updateDate)
+        Guid videoId) 
+        : base(id)
     {
         Name = name;
         StartTime = startTime;
@@ -49,6 +47,6 @@ public class Section : Entity
                 code: "StartTime.IsEqualOrGreaterThanEndTime",
                 description: $"The start time must be less than end time {endTime}");
         }
-        return new Section(id, name, description, startTime, endTime, videoId, creationDate, updateDate);
+        return new Section(id, name, description, startTime, endTime, videoId);
     }
 }

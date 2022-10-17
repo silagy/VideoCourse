@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using VideoCourse.Domain.Abstractions;
 using VideoCourse.Domain.DomainErrors;
 using VideoCourse.Domain.Events;
 using VideoCourse.Domain.Primitives;
@@ -22,6 +23,14 @@ public class Video : AggregateRoot
     // List of sections
     private List<Section> _sections { get; set; } = new();
     public IReadOnlyCollection<Section> Sections => _sections;
+
+    private List<Note> _notes { get; set; } = new();
+    public IReadOnlyCollection<Note> Notes => _notes;
+
+    private List<Question> _questions { get; set; } = new();
+    public IReadOnlyCollection<Question> Questions => _questions;
+
+    
 
     protected Video(): base()
     {
@@ -95,6 +104,68 @@ public class Video : AggregateRoot
         
         _sections.Add(section.Value);
         return section;
+    }
+
+    public ErrorOr<Note> AddNote(
+        Guid id,
+        string name,
+        string content,
+        int time)
+    {
+        var videoTime = Duration.Create(time);
+
+        if (videoTime.IsError)
+        {
+            return videoTime.Errors;
+        }
+        
+        // Check if there is any other item on the same time
+        if (GetAllItems().Any(n => n.Time.Value == videoTime.Value))
+        {
+            return CustomErrors.Video.ItemExistsOnThatTime;
+        }
+        
+        // Check if the note is greater than the video duration
+        if (videoTime.Value > Duration.Value)
+        {
+            return CustomErrors.Video.ItemIsGreaterThanVideoDuration;
+        }
+        
+        var note = Note.Create(id, name, content, videoTime.Value, Id);
+
+        if(note.IsError)
+        {
+            return note.Errors;
+        }
+        _notes.Add(note.Value);
+
+        return note;
+    }
+    
+    public IReadOnlyCollection<Item> GetAllItems()
+    {
+        var items = new List<Item>();
+        items.AddRange(_notes);
+        items.AddRange(_questions);
+        return items.OrderBy(it => it.Time.Value).ToList();
+    }
+    
+    // Set Sections for dapper
+    public void SetSections(IEnumerable<Section> sections)
+    {
+        _sections.AddRange(sections);
+    }
+    
+    // Set Notes for dapper
+    public void SetNotes(IEnumerable<Note> notes)
+    {
+        _notes.AddRange(notes);
+    }
+    
+    //Set questions for dapper
+    public void SetQuestions(IEnumerable<Question> questions)
+    {
+        _questions.AddRange(questions);
     }
 
 

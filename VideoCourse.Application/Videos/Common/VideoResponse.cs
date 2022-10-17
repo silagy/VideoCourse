@@ -9,4 +9,5 @@ public record VideoResponse(
     Guid CreatorId,
     DateTime CreationDate,
     DateTime UpdateDate,
-    IEnumerable<SectionResponse> Sections);
+    IEnumerable<SectionResponse> Sections,
+    IEnumerable<ItemResponse> Items);

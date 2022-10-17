@@ -18,4 +18,6 @@ public interface IVideoRepository : IRepository<Video>
     Task<ErrorOr<Section>> GetSectionById(Guid id);
     Task<ErrorOr<bool>> RemoveSection(Section section);
     Task<IEnumerable<Video>> GetVideosByCreatorId(Guid id);
+    Task<ErrorOr<Note>> AddNote(Note note);
+    Task<Video> GetVideoWithAllContentById(Guid id);
 }

@@ -41,7 +41,15 @@ public class GetVideoWithSectionQueryHandler : IRequestHandler<GetVideoWithSecti
                 s.StartTime.Value,
                 s.EndTime.Value,
                 s.CreationDate,
-                s.UpdateDate))
+                s.UpdateDate)),
+            Items: video.GetAllItems().Select(it => new ItemResponse(
+                it.Id,
+                it.Name,
+                it.Content,
+                it.Time.Value,
+                it.VideoId,
+                it.CreationDate,
+                it.UpdateDate))
         );
     }
 }

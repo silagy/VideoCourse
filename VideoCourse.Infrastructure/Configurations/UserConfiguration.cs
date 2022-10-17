@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using VideoCourse.Domain.Entities;
+using VideoCourse.Infrastructure.Common.DbContextExtensions;
 
 namespace VideoCourse.Infrastructure.Configurations;
 
@@ -8,9 +9,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable("Users");
-        
-        builder.HasKey(user => user.Id);
+        builder.ToTable("Users")
+            .HasKey(u => u.Id);
 
         builder.Property(user => user.FirstName).IsRequired();
         builder.Property(user => user.LastName).IsRequired();
@@ -18,7 +18,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         {
             emailBuilder.WithOwner();
             emailBuilder.Property(email => email.Value)
-                .HasColumnName(nameof(User.Email))
+                .HasColumnName(nameof(User.Email).ToSnakeCase())
                 .IsRequired();
         });
         builder.Property(user => user.Password)

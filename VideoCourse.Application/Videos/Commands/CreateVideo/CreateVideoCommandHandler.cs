@@ -4,6 +4,7 @@ using VideoCourse.Application.Core.Abstractions.Common;
 using VideoCourse.Application.Core.Abstractions.Data;
 using VideoCourse.Application.Core.Abstractions.Repositories;
 using VideoCourse.Application.Videos.Common;
+using VideoCourse.Domain.DomainErrors;
 using VideoCourse.Domain.Entities;
 using VideoCourse.Domain.ValueObjects;
 
@@ -52,6 +53,11 @@ public class CreateVideoCommandHandler : IRequestHandler<CreateVideoCommand, Err
         if (creator.IsError)
         {
             return creator.Errors;
+        }
+
+        if (creator.Value is null)
+        {
+            return CustomErrors.Video.CreatorNotFound;
         }
         
         // Creating video entity

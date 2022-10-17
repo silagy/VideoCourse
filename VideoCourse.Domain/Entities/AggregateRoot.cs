@@ -9,7 +9,7 @@ public abstract class AggregateRoot : Entity
 
     public List<IDomainEvent> GetDomainEvents() => _domainEvents.ToList();
     protected AggregateRoot(Guid id, DateTime creationDate, DateTime updateDate) 
-        : base(id, creationDate, updateDate)
+        : base(id)
     {
     }
 

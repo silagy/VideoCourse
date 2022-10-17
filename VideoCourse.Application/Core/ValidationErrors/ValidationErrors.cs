@@ -65,6 +65,33 @@ public static class ValidationErrors
             description: "Section End Time must be more than 0");
     }
     
+    public static class Note
+    {
+        public static Error NameIsRequired => Error.Validation(
+            code: "Note.NameIsRequired",
+            description: "Note name is required");
+        
+        public static Error NameMinLength => Error.Validation(
+            code: "Note.NameMinLength",
+            description: "Note name min length is 3");
+        
+        public static Error ContentIsRequired => Error.Validation(
+            code: "Note.ContentIsRequired",
+            description: "Note content is required");
+        
+        public static Error TimeMinLength => Error.Validation(
+            code: "Note.TimeMinLength",
+            description: "Note time mark must be greater than 0");
+        
+        public static Error TimeIsRequired => Error.Validation(
+            code: "Note.TimeIsRequired",
+            description: "Note time is required");
+        
+        public static Error VideoIdIsRequired => Error.Validation(
+            code: "Note.VideoIdIsRequired",
+            description: "Note videoId is required");
+    }
+    
     public static class User
     {
         public static Error FirstNameIsRequired => Error.Validation(

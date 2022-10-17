@@ -1,7 +1,9 @@
-﻿using ErrorOr;
+﻿using Dapper;
+using ErrorOr;
 using Microsoft.EntityFrameworkCore;
 using VideoCourse.Application.Core.Abstractions.Data;
 using VideoCourse.Application.Core.Abstractions.Repositories;
+using VideoCourse.Application.Core.ValidationErrors;
 using VideoCourse.Domain.DomainErrors;
 using VideoCourse.Domain.Entities;
 using VideoCourse.Infrastructure.Common;
@@ -113,5 +115,24 @@ public class VideoRepository : GenericRepository<Video>, IVideoRepository
             parameters: new { CreatorId = id });
 
         return results;
+    }
+
+    public async Task<ErrorOr<Note>> AddNote(Note note)
+    {
+        return await _dbContext.Insert(note);
+    }
+
+    public async Task<Video> GetVideoWithAllContentById(Guid id)
+    {
+        SqlMapper.GridReader results = await _dbContext.GetRecordUsingMultipleQueries(
+            QueriesRepository.Videos.GetVideoWithAllItemsMultipleQuery,
+            new { VideoId = id });
+
+        var video = await results.ReadFirstOrDefaultAsync<Video>();
+        video.SetSections(await results.ReadAsync<Section>());
+        video.SetNotes(await results.ReadAsync<Note>());
+        video.SetQuestions(await results.ReadAsync<Question>());
+
+        return video;
     }
 }

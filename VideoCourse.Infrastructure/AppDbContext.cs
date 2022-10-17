@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using VideoCourse.Application.Core.Abstractions.Data;
 using VideoCourse.Domain.DomainErrors;
 using VideoCourse.Domain.Entities;
+using VideoCourse.Infrastructure.Common.DbContextExtensions;
 
 namespace VideoCourse.Infrastructure;
 
@@ -21,9 +22,13 @@ public class AppDbContext : DbContext, IDbContext, IUnitOfWork
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        
+
         base.OnModelCreating(modelBuilder);
+        
+        modelBuilder.LowercaseTablesAndProperties();
     }
+    
+        
 
     public  DbSet<TEntity> Set<TEntity>() where TEntity : Entity
     {
@@ -74,7 +79,6 @@ public class AppDbContext : DbContext, IDbContext, IUnitOfWork
                 sql: query,
                 param: parameters,
                 commandType: CommandType.Text);
-            
 
             return results;
 
@@ -108,6 +112,16 @@ public class AppDbContext : DbContext, IDbContext, IUnitOfWork
             param: parameters,
             commandType: CommandType.Text,
             transaction: transaction.GetDbTransaction());
+
+        return results;
+    }
+
+    public async Task<SqlMapper.GridReader> GetRecordUsingMultipleQueries(string query, object param)
+    {
+        var results = await Database.GetDbConnection().QueryMultipleAsync(
+            sql: query,
+            param: param,
+            commandType: CommandType.Text);
 
         return results;
     }
