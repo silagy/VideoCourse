@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Mapster;
 using MediatR;
 using VideoCourse.Application.Core.Abstractions.Repositories;
 using VideoCourse.Application.Videos.Common;
@@ -16,7 +17,7 @@ public class GetVideoWithSectionQueryHandler : IRequestHandler<GetVideoWithSecti
 
     public async Task<ErrorOr<VideoResponse>> Handle(GetVideoWithSectionsQuery request, CancellationToken cancellationToken)
     {
-        var videoResponse = await _videoRepository.GetByIdWithSections(request.Id);
+        var videoResponse = await _videoRepository.GetVideoWithAllContentById(request.Id);
 
         if (videoResponse.IsError)
         {
@@ -25,31 +26,6 @@ public class GetVideoWithSectionQueryHandler : IRequestHandler<GetVideoWithSecti
 
         var video = videoResponse.Value;
         // Need to transform to video response
-        return new VideoResponse(
-            video.Id,
-            video.Url.Value,
-            video.Name,
-            video.Description,
-            video.Duration.Value,
-            video.CreatorId,
-            video.CreationDate,
-            video.UpdateDate,
-            Sections: video.Sections.Select(s => new SectionResponse(
-                s.Id,
-                s.Name,
-                s.Description,
-                s.StartTime.Value,
-                s.EndTime.Value,
-                s.CreationDate,
-                s.UpdateDate)),
-            Items: video.GetAllItems().Select(it => new ItemResponse(
-                it.Id,
-                it.Name,
-                it.Content,
-                it.Time.Value,
-                it.VideoId,
-                it.CreationDate,
-                it.UpdateDate))
-        );
+        return video.Adapt<VideoResponse>();
     }
 }

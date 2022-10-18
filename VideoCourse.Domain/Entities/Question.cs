@@ -27,7 +27,7 @@ public class Question : Item
         TypeId = (int)ItemType.Question;
     }
 
-    public static ErrorOr<Question> AddQuestion(
+    public static ErrorOr<Question> Create(
         Guid id,
         string name,
         string? feedback,

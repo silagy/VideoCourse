@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using VideoCourse.Application.Videos.Commands.CreateNote;
+using VideoCourse.Application.Videos.Commands.CreateQuestion;
 using VideoCourse.Application.Videos.Commands.CreateSection;
 using VideoCourse.Application.Videos.Commands.CreateVideo;
 using VideoCourse.Application.Videos.Commands.DeleteSection;
@@ -94,7 +95,9 @@ public class VideosController : ApiController
         var request = new PublishVideoCommand(id);
         var response = await _sender.Send(request);
 
-        return NoContent();
+        return response.Match(
+            video => Ok(video),
+            errors => Problem(errors));
     }
 
     [HttpPost]
@@ -107,6 +110,17 @@ public class VideosController : ApiController
             note => Ok(note),
             errors => Problem(errors));
 
+    }
+
+    [HttpPost]
+    [Route("questions")]
+    public async Task<IActionResult> AddQuestion(CreateQuestionCommand request, CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(request);
+
+        return result.Match(
+            question => Ok(question),
+            errors => Problem(errors));
     }
     
 }

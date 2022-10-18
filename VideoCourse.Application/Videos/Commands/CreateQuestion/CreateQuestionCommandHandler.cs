@@ -5,45 +5,44 @@ using VideoCourse.Application.Core.Abstractions.Data;
 using VideoCourse.Application.Core.Abstractions.Repositories;
 using VideoCourse.Application.Videos.Common;
 using VideoCourse.Domain.DomainErrors;
+using VideoCourse.Domain.Entities;
 
-namespace VideoCourse.Application.Videos.Commands.CreateNote;
+namespace VideoCourse.Application.Videos.Commands.CreateQuestion;
 
-public class CreateNoteCommandHandler : IRequestHandler<CreateNoteCommand, ErrorOr<VideoResponse>>
+public class CreateQuestionCommandHandler : IRequestHandler<CreateQuestionCommand, ErrorOr<VideoResponse>>
 {
     private readonly IVideoRepository _videoRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreateNoteCommandHandler(IVideoRepository videoRepository, IUnitOfWork unitOfWork)
+    public CreateQuestionCommandHandler(IVideoRepository videoRepository, IUnitOfWork unitOfWork)
     {
         _videoRepository = videoRepository;
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<ErrorOr<VideoResponse>> Handle(CreateNoteCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<VideoResponse>> Handle(CreateQuestionCommand request, CancellationToken cancellationToken)
     {
-        // Get the video with all items
+        // Get the video
         var videoResponse = await _videoRepository.GetVideoWithAllContentById(request.VideoId);
 
         if (videoResponse.IsError) return videoResponse.Errors;
 
         var video = videoResponse.Value;
-        // Create new Note
-        var noteResponse = video.AddNote(
-            Guid.NewGuid(),
-            request.Name,
-            request.Content,
-            request.Time
-        );
-
-        if (noteResponse.IsError)
-        {
-            return noteResponse.Errors;
-        }
         
-        // Add note to database
-        await _videoRepository.AddNote(noteResponse.Value);
+        // Create the question
+        var questionResponse = video.AddQuestion(Guid.NewGuid(),
+            request.Name,
+            request.Feedback,
+            request.Content,
+            request.Time,
+            request.VideoId);
+
+        if (questionResponse.IsError) return questionResponse.Errors;
+
+        await _videoRepository.AddQuestion(questionResponse.Value);
         await _unitOfWork.Commit();
 
         return video.Adapt<VideoResponse>();
+
     }
 }

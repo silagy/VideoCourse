@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
 using FluentValidation;
+using Mapster;
+using MapsterMapper;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,8 +20,19 @@ public static class DependencyInjection
         services.AddMediatR(typeof(DependencyInjection).Assembly);
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         services.Configure<MailSettings>(configuration.GetSection(MailSettings.SectionName));
+        
+        AddMappings(services);
 
         //services.AddScoped<IPipelineBehavior<CreateVideoCommand, ErrorOr<BasicVideoResponse>>, CreateVideoBehavior>();
         return services;
+    }
+
+    private static void AddMappings(IServiceCollection services)
+    {
+        // Add Mapster mapping
+        var config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(Assembly.GetExecutingAssembly());
+        services.AddSingleton(config);
+        services.AddScoped<IMapper, ServiceMapper>();
     }
 }

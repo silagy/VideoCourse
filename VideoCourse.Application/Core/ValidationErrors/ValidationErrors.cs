@@ -91,6 +91,37 @@ public static class ValidationErrors
             code: "Note.VideoIdIsRequired",
             description: "Note videoId is required");
     }
+
+    public static class Question
+    {
+        public static Error NameIsRequired => Error.Validation(
+            code: "Question.NameIsRequired",
+            description: "Question name is required");
+        
+        public static Error NameMinLength => Error.Validation(
+            code: "Question.NameMinLength",
+            description: "Question name min length is 3");
+        
+        public static Error ContentIsRequired => Error.Validation(
+            code: "Content.NameIsRequired",
+            description: "Content name is required");
+        
+        public static Error ContentMinLength => Error.Validation(
+            code: "Content.NameMinLength",
+            description: "Content name min length is 3");
+        
+        public static Error TimeMinLength => Error.Validation(
+            code: "Question.TimeMinLength",
+            description: "Question time mark must be greater than 0");
+        
+        public static Error TimeIsRequired => Error.Validation(
+            code: "Question.TimeIsRequired",
+            description: "Question time is required");
+        
+        public static Error VideoIdIsRequired => Error.Validation(
+            code: "Question.VideoIdIsRequired",
+            description: "Question videoId is required");
+    }
     
     public static class User
     {

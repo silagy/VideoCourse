@@ -1,8 +1,6 @@
 ﻿using ErrorOr;
-using VideoCourse.Domain.Abstractions;
 using VideoCourse.Domain.DomainErrors;
 using VideoCourse.Domain.Events;
-using VideoCourse.Domain.Primitives;
 using VideoCourse.Domain.ValueObjects;
 
 namespace VideoCourse.Domain.Entities;
@@ -141,7 +139,38 @@ public class Video : AggregateRoot
 
         return note;
     }
-    
+
+    public ErrorOr<Question> AddQuestion(
+        Guid id,
+        string name,
+        string? feedback,
+        string content,
+        int time,
+        Guid videoId)
+    {
+        var questionTime = Duration.Create(time);
+
+        if (questionTime.IsError) return questionTime.Errors;
+
+        if (GetAllItems().Any(it => it.Time.Value == questionTime.Value))
+            return CustomErrors.Video.ItemExistsOnThatTime;
+
+        var question = Question.Create(
+            id,
+            name,
+            feedback,
+            content,
+            questionTime.Value,
+            videoId);
+
+        if (question.IsError) return question.Errors;
+        
+        _questions.Add(question.Value);
+
+        return question;
+
+    }
+
     public IReadOnlyCollection<Item> GetAllItems()
     {
         var items = new List<Item>();

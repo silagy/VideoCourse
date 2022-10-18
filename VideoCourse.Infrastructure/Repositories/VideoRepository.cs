@@ -122,13 +122,19 @@ public class VideoRepository : GenericRepository<Video>, IVideoRepository
         return await _dbContext.Insert(note);
     }
 
-    public async Task<Video> GetVideoWithAllContentById(Guid id)
+    public async Task<ErrorOr<Question>> AddQuestion(Question question)
+    {
+        return await _dbContext.Insert(question);
+    }
+
+    public async Task<ErrorOr<Video>> GetVideoWithAllContentById(Guid id)
     {
         SqlMapper.GridReader results = await _dbContext.GetRecordUsingMultipleQueries(
             QueriesRepository.Videos.GetVideoWithAllItemsMultipleQuery,
             new { VideoId = id });
 
-        var video = await results.ReadFirstOrDefaultAsync<Video>();
+        Video? video = await results.ReadFirstOrDefaultAsync<Video>();
+        if (video is null) return CustomErrors.Entity.EntityNotFound;
         video.SetSections(await results.ReadAsync<Section>());
         video.SetNotes(await results.ReadAsync<Note>());
         video.SetQuestions(await results.ReadAsync<Question>());

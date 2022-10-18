@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Mapster;
 using MediatR;
 using VideoCourse.Application.Core.Abstractions.Common;
 using VideoCourse.Application.Core.Abstractions.Data;
@@ -79,32 +80,6 @@ public class CreateSectionCommandHandler : IRequestHandler<CreateSectionCommand,
         await _unitOfWork.Commit();
 
         // Need to transform to video response
-        return new VideoResponse(
-            video.Id,
-            video.Url.Value,
-            video.Name,
-            video.Description,
-            video.Duration.Value,
-            video.CreatorId,
-            video.CreationDate,
-            video.UpdateDate,
-            Sections: video.Sections.Select(s => new SectionResponse(
-                s.Id,
-                s.Name,
-                s.Description,
-                s.StartTime.Value,
-                s.EndTime.Value,
-                s.CreationDate,
-                s.UpdateDate)
-                ),
-            Items: video.GetAllItems().Select(it => new ItemResponse(
-                it.Id,
-                it.Name,
-                it.Content,
-                it.Time.Value,
-                it.VideoId,
-                it.CreationDate,
-                it.UpdateDate))
-        );
+        return video.Adapt<VideoResponse>();
     }
 }
