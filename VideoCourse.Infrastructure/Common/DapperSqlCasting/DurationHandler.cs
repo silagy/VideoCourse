@@ -13,8 +13,7 @@ public class DurationHandler : SqlMapper.TypeHandler<Duration>
 
     public override Duration Parse(object value)
     {
-        
-        var DurationResult = Domain.ValueObjects.Duration.Create(value.ToString());
-        return DurationResult.Value;
+        var durationResult = Domain.ValueObjects.Duration.Create(value.ToString()!);
+        return durationResult.Value;
     }
 }

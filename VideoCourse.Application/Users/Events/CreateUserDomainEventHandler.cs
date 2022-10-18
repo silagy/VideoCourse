@@ -1,9 +1,7 @@
-﻿using System.Security.AccessControl;
-using MediatR;
+﻿using MediatR;
 using VideoCourse.Application.Core.Abstractions.Emails;
 using VideoCourse.Application.Core.Abstractions.Emails.EmailTemplates;
 using VideoCourse.Application.Core.Abstractions.Repositories;
-using VideoCourse.Domain.DomainErrors;
 using VideoCourse.Domain.Events;
 
 namespace VideoCourse.Application.Users.Events;

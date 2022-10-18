@@ -27,7 +27,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        string connectionString = configuration.GetConnectionString("Default");
+        string connectionString = configuration.GetConnectionString("Default")!;
         services.AddSingleton<UpdateAuditableEntityInterceptor>();
         services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
         services.AddSingleton<SoftDeletedEntityInterceptor>();
@@ -35,11 +35,11 @@ public static class DependencyInjection
         SqlMapper.AddTypeHandler(new VideoUrlHandler());
         SqlMapper.AddTypeHandler(new DurationHandler());
 
-        services.AddQuartz(configuration =>
+        services.AddQuartz(quartzConfigurator =>
         {
             var jobkey = new JobKey(nameof(ProcessOutboxMessages));
 
-            configuration
+            quartzConfigurator
                 .AddJob<ProcessOutboxMessages>(jobkey)
                 .AddTrigger(trigger =>
                     trigger.ForJob(jobkey)
@@ -48,25 +48,25 @@ public static class DependencyInjection
                                 schedule.WithIntervalInSeconds(10)
                                     .RepeatForever()));
 
-            configuration.UseMicrosoftDependencyInjectionJobFactory();
+            quartzConfigurator.UseMicrosoftDependencyInjectionJobFactory();
         });
 
         services.AddQuartzHostedService();
         
         services.AddDbContext<AppDbContext>((sp, options) =>
         {
-            var AuditableEntityInterceptor = sp.GetService<UpdateAuditableEntityInterceptor>();
-            var ConvertDomainEventsToOutboxMessagesInterceptor =
+            var auditableEntityInterceptor = sp.GetService<UpdateAuditableEntityInterceptor>();
+            var convertDomainEventsToOutboxMessagesInterceptor =
                 sp.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
-            var SoftDeleteEntitiesInterceptor = sp.GetService<SoftDeletedEntityInterceptor>();
+            var softDeleteEntitiesInterceptor = sp.GetService<SoftDeletedEntityInterceptor>();
             options.UseNpgsql(connectionString)
-                .AddInterceptors(AuditableEntityInterceptor)
-                .AddInterceptors(ConvertDomainEventsToOutboxMessagesInterceptor)
-                .AddInterceptors(SoftDeleteEntitiesInterceptor);
+                .AddInterceptors(auditableEntityInterceptor!)
+                .AddInterceptors(convertDomainEventsToOutboxMessagesInterceptor!)
+                .AddInterceptors(softDeleteEntitiesInterceptor!);
         });
         
-        services.AddScoped<IDbContext>(serviceProvider => serviceProvider.GetService<AppDbContext>());
-        services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetService<AppDbContext>());
+        services.AddScoped<IDbContext>(serviceProvider => serviceProvider.GetService<AppDbContext>()!);
+        services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetService<AppDbContext>()!);
         services.AddTransient<IPasswordHasher, PasswordHasher>();
         services.AddTransient<IPasswordHashChecker, PasswordHasher>();
         services.AddTransient<IDateTime, DateTimeProvider>();
@@ -83,9 +83,9 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var JwtSettings = new JwtSettings();
-        services.AddSingleton(Options.Create(JwtSettings));
-        configuration.Bind(JwtSettings.SectionName, JwtSettings);
+        var jwtSettings = new JwtSettings();
+        services.AddSingleton(Options.Create(jwtSettings));
+        configuration.Bind(JwtSettings.SectionName, jwtSettings);
         
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
@@ -98,10 +98,10 @@ public static class DependencyInjection
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = JwtSettings.Issuer,
-                ValidAudience = JwtSettings.Audience,
+                ValidIssuer = jwtSettings.Issuer,
+                ValidAudience = jwtSettings.Audience,
                 IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(JwtSettings.Secret))
+                    Encoding.UTF8.GetBytes(jwtSettings.Secret))
             });
         
         return services;

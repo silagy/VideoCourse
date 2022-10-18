@@ -34,7 +34,7 @@ public class VideoConfiguration : IEntityTypeConfiguration<Video>
                 .IsRequired();
         });
 
-        builder.HasOne<User>(v => v.Creator)
+        builder.HasOne(v => v.Creator)
             .WithMany()
             .HasForeignKey(v => v.CreatorId)
             .IsRequired();

@@ -28,7 +28,7 @@ public class PublishedVideoDomainEventHandler : INotificationHandler<PublishedVi
         }
 
         var video = videoResult.Value;
-        var emailResult = await _emailService.SendPublishedVideoMessage(new VideoPublishedEmailMessage(
+       await _emailService.SendPublishedVideoMessage(new VideoPublishedEmailMessage(
             emailTo: video.Creator.Email,
             videoId: video.Id,
             video.Url,
@@ -37,6 +37,6 @@ public class PublishedVideoDomainEventHandler : INotificationHandler<PublishedVi
             video.Name
         ));
 
-        return;
+       
     }
 }

@@ -61,7 +61,7 @@ public class ProcessOutboxMessages : IJob
             catch (Exception e)
             {
                 message.PublishedOnUtc = _dateTimeProvider.UtcNow;
-                message.Error = e.Message.ToString();
+                message.Error = e.Message;
             }
         }
 

@@ -27,14 +27,14 @@ public class SoftDeletedEntityInterceptor : SaveChangesInterceptor
                 entity.Property(nameof(ISoftDeleteEntity.IsDeleted)).CurrentValue = true;
                 entity.State = EntityState.Modified;
 
-                updateDeletedEntityReferencesToUnchanged(entity);
+                UpdateDeletedEntityReferencesToUnchanged(entity);
             }
         }
 
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private static void updateDeletedEntityReferencesToUnchanged(EntityEntry entity)
+    private static void UpdateDeletedEntityReferencesToUnchanged(EntityEntry entity)
     {
         if (!entity.References.Any())
         {
@@ -43,14 +43,12 @@ public class SoftDeletedEntityInterceptor : SaveChangesInterceptor
 
         foreach (var referenceEntry in entity.References.Where(r => r.TargetEntry is not null && r.TargetEntry.State == EntityState.Deleted))
         {
-            if (referenceEntry is null)
+            if (referenceEntry.TargetEntry != null)
             {
-                return;
+                referenceEntry.TargetEntry.State = EntityState.Unchanged;
+
+                UpdateDeletedEntityReferencesToUnchanged(referenceEntry.TargetEntry);
             }
-            referenceEntry.TargetEntry.State = EntityState.Unchanged;
-            
-            updateDeletedEntityReferencesToUnchanged(referenceEntry.TargetEntry);
-            
         }
     }
 }

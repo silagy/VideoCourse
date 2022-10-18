@@ -41,9 +41,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Error
             request.LastName,
             email.Value,
             _passwordHasher.HashPassword(request.Password),
-            request.Role,
-            DateTime.UtcNow,
-            DateTime.UtcNow);
+            request.Role);
 
         var results = await _userRepository.Create(user);
 

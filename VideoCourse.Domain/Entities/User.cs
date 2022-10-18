@@ -23,9 +23,7 @@ public class User : AggregateRoot
         string lastName,
         Email email,
         string password,
-        UserRole role,
-        DateTime creationDate,
-        DateTime updateDate
+        UserRole role
     ) : base(id)
     {
         FirstName = firstName;

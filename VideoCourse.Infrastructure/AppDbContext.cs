@@ -30,7 +30,7 @@ public class AppDbContext : DbContext, IDbContext, IUnitOfWork
     
         
 
-    public  DbSet<TEntity> Set<TEntity>() where TEntity : Entity
+    public new DbSet<TEntity> Set<TEntity>() where TEntity : Entity
     {
         return base.Set<TEntity>();
     }
@@ -51,12 +51,12 @@ public class AppDbContext : DbContext, IDbContext, IUnitOfWork
     public async Task<ErrorOr<TEntity>> Insert<TEntity>(TEntity entity) where TEntity : Entity
     {
         var entry = await Set<TEntity>().AddAsync(entity);
-        return entity;
+        return entry.Entity;
     }
 
-    public async Task<ErrorOr<bool>> Remove<TEntity>(TEntity entity) where TEntity : Entity
+    public new async Task<ErrorOr<bool>> Remove<TEntity>(TEntity entity) where TEntity : Entity
     {
-        var entry = Set<TEntity>().Remove(entity);
+        Set<TEntity>().Remove(entity);
         return true;
     }
 

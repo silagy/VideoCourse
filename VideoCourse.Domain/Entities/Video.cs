@@ -37,8 +37,6 @@ public class Video : AggregateRoot
     
     public Video(
         Guid id,
-        DateTime creationDate,
-        DateTime updateDate,
         VideoUrl url,
         string name,
         string? description,

@@ -13,6 +13,6 @@ public class EmailDapperConvertHandler : SqlMapper.TypeHandler<Email>
 
     public override Email Parse(object value)
     {
-        return Email.Create(value.ToString()).Value;
+        return Email.Create(value.ToString()!).Value;
     }
 }

@@ -13,7 +13,7 @@ public class VideoUrlHandler : SqlMapper.TypeHandler<VideoUrl>
 
     public override VideoUrl Parse(object value)
     {
-        var videoUrl = VideoUrl.Create(value.ToString());
+        var videoUrl = VideoUrl.Create(value.ToString()!);
 
         return videoUrl.Value;
     }

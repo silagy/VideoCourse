@@ -24,7 +24,7 @@ public class UserRepository: GenericRepository<User>, IUserRepository
             return CustomErrors.User.UserExists;
         }
         // Create user
-        _dbContext.Insert(user);
+        await _dbContext.Insert(user);
         return user;
     }
 

@@ -1,7 +1,6 @@
 ﻿using ErrorOr;
 using Mapster;
 using MediatR;
-using VideoCourse.Application.Core.Abstractions.Common;
 using VideoCourse.Application.Core.Abstractions.Data;
 using VideoCourse.Application.Core.Abstractions.Repositories;
 using VideoCourse.Application.Videos.Common;
@@ -15,15 +14,13 @@ public class CreateVideoCommandHandler : IRequestHandler<CreateVideoCommand, Err
 {
     private readonly IVideoRepository _videoRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IDateTime _dateTimeProvider;
     private readonly IUserRepository _userRepository;
 
     public CreateVideoCommandHandler(IVideoRepository videoRepository, IUnitOfWork unitOfWork,
-        IDateTime dateTimeProvider, IUserRepository userRepository)
+         IUserRepository userRepository)
     {
         _videoRepository = videoRepository;
         _unitOfWork = unitOfWork;
-        _dateTimeProvider = dateTimeProvider;
         _userRepository = userRepository;
     }
 
@@ -61,8 +58,6 @@ public class CreateVideoCommandHandler : IRequestHandler<CreateVideoCommand, Err
         // Creating video entity
         var video = new Video(
             Guid.NewGuid(),
-            _dateTimeProvider.UtcNow,
-            _dateTimeProvider.UtcNow,
             url,
             request.Name,
             request.Description,
