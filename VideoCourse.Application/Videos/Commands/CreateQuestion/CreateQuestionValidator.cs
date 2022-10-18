@@ -24,5 +24,8 @@ public class CreateQuestionValidator : AbstractValidator<CreateQuestionCommand>
 
         RuleFor(q => q.VideoId)
             .NotEmpty().WithError(ValidationErrors.Question.VideoIdIsRequired);
+
+        RuleFor(q => q.Type)
+            .IsInEnum().WithError(ValidationErrors.Question.QuestionTypeIsEnum);
     }
 }

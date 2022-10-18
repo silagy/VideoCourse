@@ -121,6 +121,23 @@ public static class ValidationErrors
         public static Error VideoIdIsRequired => Error.Validation(
             code: "Question.VideoIdIsRequired",
             description: "Question videoId is required");
+        
+        public static Error QuestionTypeIsEnum => Error.Validation(
+            code: "Question.TypeIsNotaValidEnum",
+            description: "Question type is not a valid enum");
+        
+        // Question Options errors
+        public static Error QuestionOptionIsRequired => Error.Validation(
+            code: "Question.OptionsAreRequired",
+            description: "Question options are required");
+        
+        public static Error QuestionOptionMinLength => Error.Validation(
+            code: "QuestionOption.NameMinLength",
+            description: "Question Option name min length is 3");
+        
+        public static Error QuestionOptionIsRightRequired => Error.Validation(
+            code: "Question.IsRightIsMandatory",
+            description: "Question Option right or fail are mandatory");
     }
     
     public static class User

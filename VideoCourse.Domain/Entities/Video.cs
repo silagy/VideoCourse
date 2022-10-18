@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
 using VideoCourse.Domain.DomainErrors;
+using VideoCourse.Domain.Enums;
 using VideoCourse.Domain.Events;
 using VideoCourse.Domain.ValueObjects;
 
@@ -146,7 +147,8 @@ public class Video : AggregateRoot
         string? feedback,
         string content,
         int time,
-        Guid videoId)
+        Guid videoId,
+        QuestionType questionType)
     {
         var questionTime = Duration.Create(time);
 
@@ -161,7 +163,8 @@ public class Video : AggregateRoot
             feedback,
             content,
             questionTime.Value,
-            videoId);
+            videoId,
+            questionType);
 
         if (question.IsError) return question.Errors;
         

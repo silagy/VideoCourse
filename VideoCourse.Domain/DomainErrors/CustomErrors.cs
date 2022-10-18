@@ -52,4 +52,12 @@ public static class CustomErrors
             code: "Item.IsGreaterThanVideoDuration",
             description: "Item cannot be greater than the video duration");
     }
+    
+    public static class Question
+    {
+        public static Error MultipleAnswersSingleSelectionMustHaveOneRightAnswer => Error.Failure(
+            code: "Question.MultipleAnswersSingleSelectionMustHaveOnlyOneRightAnswer",
+            description: "Question of type multiple answers with single section must have only one right answer");
+        
+    }
 }

@@ -4,6 +4,9 @@ using MediatR;
 using VideoCourse.Application.Core.Abstractions.Data;
 using VideoCourse.Application.Core.Abstractions.Repositories;
 using VideoCourse.Application.Videos.Common;
+using VideoCourse.Domain.DomainErrors;
+using VideoCourse.Domain.Entities;
+using VideoCourse.Domain.Enums;
 
 namespace VideoCourse.Application.Videos.Commands.CreateQuestion;
 
@@ -33,9 +36,26 @@ public class CreateQuestionCommandHandler : IRequestHandler<CreateQuestionComman
             request.Feedback,
             request.Content,
             request.Time,
-            request.VideoId);
+            request.VideoId,
+            request.Type);
 
         if (questionResponse.IsError) return questionResponse.Errors;
+        var question = questionResponse.Value;
+
+        foreach (var option in request.Options)
+        {
+            ErrorOr<QuestionOption> questionOptionResponse = question.AddOption(
+                Guid.NewGuid(),
+                option.Name,
+                option.IsRight
+            );
+
+            if (questionOptionResponse.IsError) return questionOptionResponse.Errors;
+        }
+
+        if (question.QuestionTypeId == (int)QuestionType.MultipleAnswersSingleSelection
+            && !question.QuestionOptions.Any(qo => qo.IsRight))
+            return CustomErrors.Question.MultipleAnswersSingleSelectionMustHaveOneRightAnswer;
 
         await _videoRepository.AddQuestion(questionResponse.Value);
         await _unitOfWork.Commit();

@@ -29,6 +29,10 @@ public class QuestionConfiguration : IEntityTypeConfiguration<Question>
             .WithMany(question => question.Questions)
             .HasForeignKey(question => question.VideoId);
 
+        builder.HasMany<QuestionOption>()
+            .WithOne()
+            .HasForeignKey(q => q.QuestionId);
+
         builder.Property(question => question.CreationDate).IsRequired();
         builder.Property(question => question.UpdateDate);
         builder.Property(question => question.IsDeleted).HasDefaultValue(false);
