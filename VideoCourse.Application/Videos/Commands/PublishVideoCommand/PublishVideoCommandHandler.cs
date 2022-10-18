@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Mapster;
 using MediatR;
 using VideoCourse.Application.Core.Abstractions.Common;
 using VideoCourse.Application.Core.Abstractions.Data;
@@ -35,16 +36,6 @@ public class PublishVideoCommandHandler : IRequestHandler<PublishVideoCommand, E
 
         await _unitOfWork.Commit();
 
-        return new BasicVideoResponse(
-            video.Id,
-            video.Url.Value,
-            video.Name,
-            video.Description,
-            video.Duration.Value,
-            video.CreatorId,
-            video.IsPublished,
-            video.PublishedOnUtc,
-            video.CreationDate,
-            video.UpdateDate);
+        return video.Adapt<BasicVideoResponse>();
     }
 }
