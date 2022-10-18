@@ -1,7 +1,5 @@
-﻿using ErrorOr;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VideoCourse.Application.Core.ValidationErrors;
 using VideoCourse.Domain.Entities;
 using VideoCourse.Infrastructure.Common.DbContextExtensions;
 

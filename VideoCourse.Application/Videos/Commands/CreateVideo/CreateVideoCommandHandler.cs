@@ -56,11 +56,8 @@ public class CreateVideoCommandHandler : IRequestHandler<CreateVideoCommand, Err
             return creator.Errors;
         }
 
-        if (creator.Value is null)
-        {
-            return CustomErrors.Video.CreatorNotFound;
-        }
-        
+        if (creator.Value is null) return CustomErrors.Entity.EntityNotFound;
+
         // Creating video entity
         var video = new Video(
             Guid.NewGuid(),

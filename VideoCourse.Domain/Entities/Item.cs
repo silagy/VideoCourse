@@ -1,6 +1,4 @@
-﻿using ErrorOr;
-using VideoCourse.Domain.Abstractions;
-using VideoCourse.Domain.Enums;
+﻿using VideoCourse.Domain.Enums;
 using VideoCourse.Domain.ValueObjects;
 
 namespace VideoCourse.Domain.Entities;

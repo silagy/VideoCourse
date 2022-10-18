@@ -40,7 +40,7 @@ public class AppDbContext : DbContext, IDbContext, IUnitOfWork
         return base.Set<TEntity>();
     }
 
-    public async Task<ErrorOr<TEntity>> GetByIdAsync<TEntity>(Guid id) 
+    public async Task<ErrorOr<TEntity?>> GetByIdAsync<TEntity>(Guid id) 
         where TEntity : Entity
     {
         return id == Guid.Empty

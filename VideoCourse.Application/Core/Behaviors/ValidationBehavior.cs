@@ -1,9 +1,5 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection.Metadata.Ecma335;
-using ErrorOr;
+﻿using ErrorOr;
 using FluentValidation;
-using FluentValidation.Results;
 using MediatR;
 
 namespace VideoCourse.Application.Core.Behaviors;

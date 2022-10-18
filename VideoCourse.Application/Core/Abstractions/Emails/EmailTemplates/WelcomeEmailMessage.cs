@@ -1,6 +1,4 @@
-﻿using VideoCourse.Domain.Entities;
-
-namespace VideoCourse.Application.Core.Abstractions.Emails.EmailTemplates;
+﻿namespace VideoCourse.Application.Core.Abstractions.Emails.EmailTemplates;
 
 public sealed class WelcomeEmailMessage : IEmailRequest
 {

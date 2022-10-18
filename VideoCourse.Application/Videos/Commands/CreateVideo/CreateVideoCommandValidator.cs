@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using FluentValidation;
+﻿using FluentValidation;
 using VideoCourse.Application.Core.Extensions;
 using VideoCourse.Application.Core.ValidationErrors;
 

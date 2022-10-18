@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using System.Security.AccessControl;
+using MediatR;
 using VideoCourse.Application.Core.Abstractions.Emails;
 using VideoCourse.Application.Core.Abstractions.Emails.EmailTemplates;
 using VideoCourse.Application.Core.Abstractions.Repositories;
+using VideoCourse.Domain.DomainErrors;
 using VideoCourse.Domain.Events;
 
 namespace VideoCourse.Application.Users.Events;
@@ -27,14 +29,15 @@ public class CreateUserDomainEventHandler : INotificationHandler<UserCreatedDoma
             return;
         }
 
+        if (userResponse.Value is null) return;
+
         var user = userResponse.Value;
 
-        var emailSentResult = await _emailService.SendWelcomeMessage(new WelcomeEmailMessage(
+        await _emailService.SendWelcomeMessage(new WelcomeEmailMessage(
             user.Email.Value,
             user.FirstName,
             user.LastName
         ));
-
-        return;
+        
     }
 }

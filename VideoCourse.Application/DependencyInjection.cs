@@ -5,7 +5,6 @@ using MapsterMapper;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using VideoCourse.Application.Core.Abstractions.Emails.Settings;
 using VideoCourse.Application.Core.Behaviors;
 

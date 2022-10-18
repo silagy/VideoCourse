@@ -3,7 +3,6 @@ using ErrorOr;
 using Microsoft.EntityFrameworkCore;
 using VideoCourse.Application.Core.Abstractions.Data;
 using VideoCourse.Application.Core.Abstractions.Repositories;
-using VideoCourse.Application.Core.ValidationErrors;
 using VideoCourse.Domain.DomainErrors;
 using VideoCourse.Domain.Entities;
 using VideoCourse.Infrastructure.Common;

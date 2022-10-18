@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using ErrorOr;
+﻿using ErrorOr;
 
 namespace VideoCourse.Domain.DomainErrors;
 

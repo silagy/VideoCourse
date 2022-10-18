@@ -4,8 +4,6 @@ using MediatR;
 using VideoCourse.Application.Core.Abstractions.Data;
 using VideoCourse.Application.Core.Abstractions.Repositories;
 using VideoCourse.Application.Videos.Common;
-using VideoCourse.Domain.DomainErrors;
-using VideoCourse.Domain.Entities;
 
 namespace VideoCourse.Application.Videos.Commands.CreateQuestion;
 

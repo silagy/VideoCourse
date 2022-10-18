@@ -5,7 +5,6 @@ using VideoCourse.Application.Core.Abstractions.Common;
 using VideoCourse.Application.Core.Abstractions.Data;
 using VideoCourse.Application.Core.Abstractions.Repositories;
 using VideoCourse.Application.Videos.Common;
-using VideoCourse.Domain.Entities;
 using VideoCourse.Domain.ValueObjects;
 
 namespace VideoCourse.Application.Videos.Commands.CreateSection;

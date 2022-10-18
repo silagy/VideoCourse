@@ -14,7 +14,7 @@ public interface IDbContext
     DbSet<TEntity> SetNoEntity<TEntity>()
         where TEntity : class;
 
-    Task<ErrorOr<TEntity>> GetByIdAsync<TEntity>(Guid id)
+    Task<ErrorOr<TEntity?>> GetByIdAsync<TEntity>(Guid id)
         where TEntity : Entity;
 
     Task<ErrorOr<TEntity>> Insert<TEntity>(TEntity entity)

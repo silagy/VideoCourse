@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using VideoCourse.Application.Core.Abstractions.Data;
 using VideoCourse.Domain.Entities;
-using VideoCourse.Infrastructure.Specifications;
 
 namespace VideoCourse.Infrastructure.Common;
 

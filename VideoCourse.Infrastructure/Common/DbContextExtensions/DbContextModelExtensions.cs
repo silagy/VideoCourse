@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VideoCourse.Domain.Entities;
 using VideoCourse.Domain.Primitives;
 
 namespace VideoCourse.Infrastructure.Common.DbContextExtensions;

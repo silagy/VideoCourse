@@ -9,7 +9,7 @@ public class Video : AggregateRoot
 {
     public VideoUrl Url { get; private set; }
     public string Name { get; private set; }
-    public bool IsDeleted { get; set; }
+    public bool IsDeleted { get; set; } = false;
     public string? Description { get; private set; }
     public Duration Duration { get; set; }
     public Guid CreatorId { get; private set; }
@@ -43,7 +43,7 @@ public class Video : AggregateRoot
         string? description,
         Duration duration,
         Guid creatorId) 
-        : base(id, creationDate, updateDate)
+        : base(id)
     {
         Url = url;
         Name = name;

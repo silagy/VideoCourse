@@ -28,7 +28,7 @@ public class UserRepository: GenericRepository<User>, IUserRepository
         return user;
     }
 
-    public Task<ErrorOr<User>> GetByIdAsync(Guid id)
+    public Task<ErrorOr<User?>> GetByIdAsync(Guid id)
     {
         return _dbContext.GetByIdAsync<User>(id);
     }

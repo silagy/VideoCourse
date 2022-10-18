@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VideoCourse.Domain.Abstractions;
 using VideoCourse.Domain.Entities;
 using VideoCourse.Infrastructure.Common.DbContextExtensions;
 

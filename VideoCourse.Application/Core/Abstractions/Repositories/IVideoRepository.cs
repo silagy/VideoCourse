@@ -1,6 +1,5 @@
 ﻿using ErrorOr;
 using VideoCourse.Application.Core.Abstractions.Data;
-using VideoCourse.Application.Videos.Common;
 using VideoCourse.Domain.Entities;
 
 namespace VideoCourse.Application.Core.Abstractions.Repositories;

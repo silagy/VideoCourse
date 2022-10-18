@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using VideoCourse.Application.Core.Extensions;
 using VideoCourse.Application.Core.ValidationErrors;
-using VideoCourse.Domain.Entities;
 
 namespace VideoCourse.Application.Videos.Commands.CreateQuestion;
 

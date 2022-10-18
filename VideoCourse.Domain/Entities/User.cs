@@ -6,16 +6,15 @@ namespace VideoCourse.Domain.Entities;
 
 public class User : AggregateRoot
 {
-    public string FirstName { get; private set; }
-    public string LastName { get; private set; }
-    public Email Email { get; private set; }
-    public string Password { get; private set; }
+    public string FirstName { get; private set; } = null!;
+    public string LastName { get; private set; } = null!;
+    public Email Email { get; private set; } = null!;
+    public string Password { get; private set; } = null!;
     public int RoleId { get; private set; }
     public UserRole Role => (UserRole)RoleId;
 
     protected User()
     {
-        
     }
 
     public User(
@@ -27,7 +26,7 @@ public class User : AggregateRoot
         UserRole role,
         DateTime creationDate,
         DateTime updateDate
-    ) : base(id, creationDate, updateDate)
+    ) : base(id)
     {
         FirstName = firstName;
         LastName = lastName;
