@@ -38,7 +38,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<UserRespons
 
         var user = userResponse.Value;
         // Validate the password
-        if (!_passwordHashChecker.HashesMatch(user.Password, request.Password))
+        if (!_passwordHashChecker.HashesMatch(user.Password,  request.Password))
         {
             return Error.Failure(
                 code: "User.PasswordInCorrect",
@@ -52,6 +52,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<UserRespons
             user.FirstName,
             user.LastName,
             user.Email,
+            user.Role,
             token);
 
         return userToReturn;

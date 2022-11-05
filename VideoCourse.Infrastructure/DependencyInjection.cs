@@ -34,6 +34,7 @@ public static class DependencyInjection
         
         SqlMapper.AddTypeHandler(new VideoUrlHandler());
         SqlMapper.AddTypeHandler(new DurationHandler());
+        SqlMapper.AddTypeHandler(new EmailDapperConvertHandler());
 
         services.AddQuartz(quartzConfigurator =>
         {
@@ -55,18 +56,19 @@ public static class DependencyInjection
         
         services.AddDbContext<AppDbContext>((sp, options) =>
         {
-            var auditableEntityInterceptor = sp.GetService<UpdateAuditableEntityInterceptor>();
-            var convertDomainEventsToOutboxMessagesInterceptor =
-                sp.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
-            var softDeleteEntitiesInterceptor = sp.GetService<SoftDeletedEntityInterceptor>();
-            options.UseNpgsql(connectionString)
-                .AddInterceptors(auditableEntityInterceptor!)
-                .AddInterceptors(convertDomainEventsToOutboxMessagesInterceptor!)
-                .AddInterceptors(softDeleteEntitiesInterceptor!);
+            //var auditableEntityInterceptor = sp.GetService<UpdateAuditableEntityInterceptor>();
+            //var convertDomainEventsToOutboxMessagesInterceptor =
+                //sp.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
+            //var softDeleteEntitiesInterceptor = sp.GetService<SoftDeletedEntityInterceptor>();
+            options.UseNpgsql(connectionString);
+            //.AddInterceptors(auditableEntityInterceptor!)
+            //.AddInterceptors(convertDomainEventsToOutboxMessagesInterceptor!)
+            //.AddInterceptors(softDeleteEntitiesInterceptor!);
         });
         
         services.AddScoped<IDbContext>(serviceProvider => serviceProvider.GetService<AppDbContext>()!);
-        services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetService<AppDbContext>()!);
+        //services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetService<AppDbContext>()!);
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddTransient<IPasswordHasher, PasswordHasher>();
         services.AddTransient<IPasswordHashChecker, PasswordHasher>();
         services.AddTransient<IDateTime, DateTimeProvider>();

@@ -37,7 +37,7 @@ public class CreateQuestionCommandHandler : IRequestHandler<CreateQuestionComman
             request.Content,
             request.Time,
             request.VideoId,
-            request.Type);
+            QuestionType.MultipleAnswersSingleSelection);
 
         if (questionResponse.IsError) return questionResponse.Errors;
         var question = questionResponse.Value;

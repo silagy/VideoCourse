@@ -3,10 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using VideoCourse.Application.Videos.Commands.CreateNote;
 using VideoCourse.Application.Videos.Commands.CreateQuestion;
 using VideoCourse.Application.Videos.Commands.CreateSection;
+using VideoCourse.Application.Videos.Commands.CreateTextQuestion;
 using VideoCourse.Application.Videos.Commands.CreateVideo;
 using VideoCourse.Application.Videos.Commands.DeleteSection;
 using VideoCourse.Application.Videos.Commands.DeleteVideo;
 using VideoCourse.Application.Videos.Commands.PublishVideoCommand;
+using VideoCourse.Application.Videos.Commands.UpdateSectionCommand;
+using VideoCourse.Application.Videos.Commands.UpdateVideoDescriptionCommand;
+using VideoCourse.Application.Videos.Queries.GetVideos;
 using VideoCourse.Application.Videos.Queries.GetVideosWithSection;
 using VideoCourse.Application.Videos.Queries.GetVidoesByCreatorId;
 
@@ -66,6 +70,19 @@ public class VideosController : ApiController
             errors => Problem(errors));
     }
 
+    [HttpPut]
+    [Route("{id:Guid}")]
+    public async Task<IActionResult> Update(Guid id, UpdateVideoDescriptionCommand request,
+        CancellationToken cancellationToken)
+    {
+        var requestUpdate = new UpdateVideoDescriptionCommand(id, request.Name, request.Description);
+        var result = await _sender.Send(requestUpdate, cancellationToken);
+
+        return result.Match(
+            video => Ok(video),
+            errors => Problem(errors));
+    }
+
     [HttpDelete]
     [Route("section/{id:Guid}")]
     public async Task<IActionResult> DeleteSection(Guid id)
@@ -75,6 +92,25 @@ public class VideosController : ApiController
 
         return result.Match(
             section => NoContent(),
+            errors => Problem(errors));
+    }
+
+    [HttpPut]
+    [Route("section/{id:Guid}")]
+    public async Task<IActionResult> UpdateSection(Guid id, UpdateSectionCommand request,
+        CancellationToken cancellationToken)
+    {
+        var requestOperation = new UpdateSectionCommand(
+            request.Name,
+            request.Description,
+            request.StartTime,
+            request.EndTime,
+            request.VideoId,
+            id);
+        var result = await _sender.Send(requestOperation, cancellationToken);
+
+        return result.Match(
+            video => Ok(video),
             errors => Problem(errors));
     }
 
@@ -88,7 +124,7 @@ public class VideosController : ApiController
         return Ok(response);
     }
 
-    [HttpGet]
+    [HttpPost]
     [Route("publish/{id:Guid}")]
     public async Task<IActionResult> PublishVideo(Guid id)
     {
@@ -113,7 +149,7 @@ public class VideosController : ApiController
     }
 
     [HttpPost]
-    [Route("questions")]
+    [Route("questions/multiple-answers")]
     public async Task<IActionResult> AddQuestion(CreateQuestionCommand request, CancellationToken cancellationToken)
     {
         var result = await _sender.Send(request);
@@ -122,5 +158,27 @@ public class VideosController : ApiController
             question => Ok(question),
             errors => Problem(errors));
     }
-    
+
+    [HttpPost]
+    [Route("questions/text-question")]
+    public async Task<IActionResult> AddTextQuestion(CreateTextQuestionCommand request,
+        CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(request, cancellationToken);
+
+        return result.Match(
+            video => Ok(video),
+            errors => Problem(errors));
+    }
+
+    [HttpPost]
+    [Route("videos-list")]
+    public async Task<IActionResult> GetVideosList(GetVideosQuery request, CancellationToken cancellationToken)
+    {
+        var videosResponse = await _sender.Send(request, cancellationToken);
+        return videosResponse.Match(
+            videos => Ok(videos),
+            errors => Problem(errors));
+    }
+
 }

@@ -12,5 +12,4 @@ public record CreateQuestionCommand(
     string Content,
     int Time,
     Guid VideoId,
-    QuestionType Type,
     IEnumerable<CreateQuestionOption> Options) : IRequest<ErrorOr<VideoResponse>>;

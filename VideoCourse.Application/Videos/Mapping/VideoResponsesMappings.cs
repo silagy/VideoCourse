@@ -9,7 +9,7 @@ public class VideoResponsesMappings : IRegister
     public void Register(TypeAdapterConfig config)
     {
         config.NewConfig<Video, VideoResponse>()
-            .Map(dest => dest.Description, src => src.Duration.Value)
+            .Map(dest => dest.Duration, src => src.Duration.Value)
             .Map(dest => dest.Url, src => src.Url.Value)
             .Map(dest => dest.Items, src => src.GetAllItems());
 
@@ -21,7 +21,7 @@ public class VideoResponsesMappings : IRegister
             .Map(dest => dest.Duration, src => src.Time.Value);
 
         config.NewConfig<Video, BasicVideoResponse>()
-            .Map(dest => dest.Description, src => src.Duration.Value)
+            .Map(dest => dest.Duration, src => src.Duration.Value)
             .Map(dest => dest.Url, src => src.Url.Value);
 
     }

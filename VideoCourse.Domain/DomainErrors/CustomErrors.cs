@@ -51,6 +51,10 @@ public static class CustomErrors
         public static Error ItemIsGreaterThanVideoDuration => Error.Failure(
             code: "Item.IsGreaterThanVideoDuration",
             description: "Item cannot be greater than the video duration");
+        
+        public static Error VideoIsAlreadyPublished => Error.Failure(
+            code: "Video.IsAlreadyPublished",
+            description:"The video is already published");
     }
     
     public static class Question

@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using System.Text;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using VideoCourse.Application.Core.Abstractions.Cryptography;
 
@@ -31,7 +32,6 @@ public class PasswordHasher : IPasswordHasher, IPasswordHashChecker, IDisposable
 
     public void Dispose()
     {
-        throw new NotImplementedException();
     }
     
     /// <summary>

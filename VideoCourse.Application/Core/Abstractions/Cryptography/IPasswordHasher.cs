@@ -7,5 +7,4 @@ public interface IPasswordHasher
     /// </summary>
     /// <param name="password">The password to be hashed.</param>
     /// <returns>The password hash.</returns>
-    string HashPassword(string password);
-}
+    string HashPassword(string password); }

@@ -16,7 +16,7 @@ public class Video : AggregateRoot
     public Guid CreatorId { get; private set; }
 
     public bool IsPublished { get; private set; }
-    public DateTime? PublishedOnUtc { get; set; }
+    public DateTime? PublishedOnUtc { get; private set; }
     public User Creator { get; set; } = null!;
     
     // List of sections
@@ -62,6 +62,12 @@ public class Video : AggregateRoot
         RaiseDomainEvent(new PublishedVideoDomainEvent(Id));
     }
 
+    public void UpdateVideoDetails(string name, string? description)
+    {
+        Name = name;
+        Description = description;
+    }
+
     public ErrorOr<Section> AddSection(
         Guid id,
         string name,
@@ -101,6 +107,50 @@ public class Video : AggregateRoot
         
         _sections.Add(section.Value);
         return section;
+    }
+
+    public ErrorOr<Section> UpdateSection(
+        Guid id,
+        string name,
+        string? description,
+        Duration startTime,
+        Duration endTime)
+    {
+        // Check if section with the same name already exits
+        if (this.Sections.Any(s => s.Name == name))
+        {
+            return CustomErrors.Video.SectionNameAlreadyExists;
+        }
+
+        foreach (var item in Sections.Where(s => s.Id != id))
+        {
+            if (startTime.Value < item.EndTime)
+            {
+                return CustomErrors.Video.SectionStartTimeMustBeSequential;
+            }
+        }
+        
+        // Find the section
+        var section = Sections.FirstOrDefault(s => s.Id == id);
+
+        if (section is not null)
+        {
+            var updateSectionRequest =  section.UpdateSection(
+                name,
+                description,
+                startTime,
+                endTime);
+
+            if (updateSectionRequest.IsError)
+            {
+                return updateSectionRequest.Errors;
+            }
+
+
+            section = updateSectionRequest.Value;
+        }
+
+        return section!;
     }
 
     public ErrorOr<Note> AddNote(

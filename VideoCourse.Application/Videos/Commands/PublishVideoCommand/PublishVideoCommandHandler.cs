@@ -5,6 +5,7 @@ using VideoCourse.Application.Core.Abstractions.Common;
 using VideoCourse.Application.Core.Abstractions.Data;
 using VideoCourse.Application.Core.Abstractions.Repositories;
 using VideoCourse.Application.Videos.Common;
+using VideoCourse.Domain.DomainErrors;
 
 namespace VideoCourse.Application.Videos.Commands.PublishVideoCommand;
 
@@ -30,8 +31,12 @@ public class PublishVideoCommandHandler : IRequestHandler<PublishVideoCommand, E
         {
             return videoRequest.Errors;
         }
-
+        
         var video = videoRequest.Value;
+        if (video.IsPublished)
+        {
+            return CustomErrors.Video.VideoIsAlreadyPublished;
+        }
         video.PublishVideo(_dateTimeProvider.UtcNow);
 
         await _unitOfWork.Commit();

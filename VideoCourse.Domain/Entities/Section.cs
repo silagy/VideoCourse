@@ -49,4 +49,25 @@ public class Section : Entity
         }
         return new Section(id, name, description, startTime, endTime, videoId);
     }
+
+    public ErrorOr<Section> UpdateSection(
+        string name,
+        string? description,
+        Duration startTime,
+        Duration endTime)
+    {
+        if (startTime.Equals(endTime) || startTime.Value > endTime.Value)
+        {
+            return Error.Validation(
+                code: "StartTime.IsEqualOrGreaterThanEndTime",
+                description: $"The start time must be less than end time {endTime}");
+        }
+
+        Name = name;
+        Description = description;
+        StartTime = startTime;
+        EndTime = endTime;
+
+        return this;
+    }
 }

@@ -8,6 +8,6 @@ public record BasicVideoResponse(
     int Duration,
     Guid CreatorId,
     bool IsPublished,
-    DateTime? PublishedDate,
+    DateTime? PublishedOnUtc,
     DateTime CreationDate,
     DateTime UpdateDate);

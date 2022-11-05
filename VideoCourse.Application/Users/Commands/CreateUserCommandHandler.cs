@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Mapster;
 using MediatR;
 using VideoCourse.Application.Core.Abstractions.Authentication;
 using VideoCourse.Application.Core.Abstractions.Cryptography;
@@ -53,11 +54,14 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Error
 
         var token = _tokenGenerator.GenerateToken(user.Id, user.FirstName, user.LastName);
 
-        return new UserResponse(
+        var userToReturn = new UserResponse(
             user.Id,
             user.FirstName,
             user.LastName,
             user.Email,
+            user.Role,
             token);
+
+        return userToReturn;
     }
 }

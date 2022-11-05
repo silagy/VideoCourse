@@ -16,8 +16,40 @@ public static class QueriesRepository
                 creation_date as CreationDate,
                 update_date as UpdateDate
             from users
-            where email = @email";
+            where email = @email
+            and is_deleted = false";
+
+        public static string GetUsersByRoleId =>
+            @"select id as Id,
+       first_name as FirstName,
+       last_name as LastName,
+       email as Email,
+    role_id as RoleId,
+    is_deleted as IsDeleted,
+    creation_date as CreationDate,
+    update_date as UpdateDate from users
+    where (role_id = @RoleID or @RoleId is null)
+    and is_deleted = false
+    order by creation_date
+    limit @PageSize
+    offset @Page";
+        
+        public static string GetCreators => @"select
+    id as Id,
+       first_name as FirstName,
+       last_name as LastName,
+       email as Email,
+    role_id as RoleId,
+    is_deleted as IsDeleted,
+    creation_date as CreationDate,
+    update_date as UpdateDate
+from users as us
+where us.is_deleted = false
+and us.role_id = 1
+and us.id in(select distinct creator_id from videos)";
     }
+
+   
 
     public static class Videos
     {
@@ -82,6 +114,31 @@ select
     type_id as TypeId,
     video_id as VideoId
 from questions where video_id = @VideoId and questions.is_deleted = false;";
+        
+        public static string GetVideosWithParameters => $@"select
+                                                        id as Id,
+                                                        url as Url,
+                                                        name as Name,
+                                                        duration as Duration,
+                                                        description as Description,
+                                                        creator_id as CreatorId,
+                                                        is_deleted as IsDeleted,
+                                                        creation_date as CreationDate,
+                                                        update_date as UpdateDate,
+                                                        is_published as IsPublished,
+                                                        published_on_utc as PublishedOnUtc
+                                                    from videos
+                                                    where
+                                                        is_deleted = false and
+                                                        (creator_id = @CreatorId or @CreatorId is null) and
+                                                        (creation_date >= @StartDate or @StartDate is null) and
+                                                        (creation_date <= @EndDate or @EndDate is null)
+                                                    order by creation_date
+                                                    limit @PageSize
+                                                    offset @Page";
+        
     }
+
     
+
 }

@@ -7,6 +7,7 @@ using VideoCourse.Domain.DomainErrors;
 using VideoCourse.Domain.Entities;
 using VideoCourse.Infrastructure.Common;
 using VideoCourse.Infrastructure.Common.Queries;
+using VideoCourse.Infrastructure.Specifications;
 
 namespace VideoCourse.Infrastructure.Repositories;
 
@@ -35,7 +36,7 @@ public class VideoRepository : GenericRepository<Video>, IVideoRepository
     public async Task<ErrorOr<Video>> GetByIdWithSections(Guid id)
     {
         var result = await _dbContext.Set<Video>()
-            .Include(v => v.Sections)
+            .AddSpecification(new GetVideoByIdWithSectionsSpecifications(id))
             .FirstOrDefaultAsync(v => v.Id == id);
 
         return result;
@@ -44,7 +45,7 @@ public class VideoRepository : GenericRepository<Video>, IVideoRepository
     public async Task<ErrorOr<Video>> GetByIdWithCreator(Guid id)
     {
         Video? result = await _dbContext.Set<Video>()
-            .Include(v => v.Creator)
+            .AddSpecification(new GetVideoByIdWithCreator(id))
             .FirstOrDefaultAsync(v => v.Id == id);
 
         if (result is null)
@@ -139,5 +140,32 @@ public class VideoRepository : GenericRepository<Video>, IVideoRepository
         video.SetQuestions(await results.ReadAsync<Question>());
 
         return video;
+    }
+
+    public async Task<IEnumerable<Video>> GetVideosByParameters(Guid? creatorId, DateTime? startDate, DateTime? endDate, int page, int pageLimit)
+    {
+        IEnumerable<Video> results = await _dbContext.GetRecordsUsingRawSqlAsync<Video>(
+                QueriesRepository.Videos.GetVideosWithParameters,
+                new
+                {
+                    CreatorId = creatorId,
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    PageSize = pageLimit,
+                    Page = (page - 1) * pageLimit
+                });
+
+            return results;
+    }
+
+    public async Task<ErrorOr<Section>> UpdateSection(Section section)
+    {
+        var entityEntry = _dbContext.Set<Section>().Update(section);
+        return await Task.FromResult(entityEntry.Entity);
+    }
+
+    public async Task<int?> GetTotalVideos()
+    {
+        return await _dbContext.Set<Video>().CountAsync();
     }
 }

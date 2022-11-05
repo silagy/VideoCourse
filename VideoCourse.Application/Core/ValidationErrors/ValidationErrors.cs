@@ -4,6 +4,20 @@ namespace VideoCourse.Application.Core.ValidationErrors;
 
 public static class ValidationErrors
 {
+    public static class PageResult
+    {
+        public static Error PageIsRequired => Error.Validation(
+            code: "Page.IsRequired",
+            description: "Page is required");
+        
+        public static Error PageSizeIsRequired => Error.Validation(
+            code: "PageSize.IsRequired",
+            description: "Page size is required");
+
+        public static Error MustBeGreaterThanZero => Error.Validation(
+            code: "Page.MustBeGreaterThanZero",
+            description: "Page must be greater than zero");
+    }
     public static class Video
     {
         public static Error IdIsRequired => Error.Validation(
@@ -142,6 +156,9 @@ public static class ValidationErrors
     
     public static class User
     {
+        public static Error IdIsRequired => Error.Validation(
+            code: "User.IdIsRequired",
+            description: " User Id is required");
         public static Error FirstNameIsRequired => Error.Validation(
             code: "User.FirstNameIsRequired",
             description: " User FirstName is required");
@@ -181,5 +198,12 @@ public static class ValidationErrors
         public static Error RoleMustBeValidEnum => Error.Validation(
             code: "User.RoleMustBeValidEnum",
             description: " User Role must be a valid enum");
+    }
+
+    public static class Search
+    {
+        public static Error SearchTermMustBeGreaterThanEqualToThree => Error.Validation(
+            code: "SearchTerm.MustBeGreaterThanEqualToThree",
+            description: "Search Term must be greater or equal to 3 characters");
     }
 }

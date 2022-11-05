@@ -11,7 +11,7 @@ using VideoCourse.Infrastructure.Common.DbContextExtensions;
 
 namespace VideoCourse.Infrastructure;
 
-public class AppDbContext : DbContext, IDbContext, IUnitOfWork
+public class AppDbContext : DbContext, IDbContext
 {
     public AppDbContext(DbContextOptions options)
     :base(options)
@@ -124,16 +124,5 @@ public class AppDbContext : DbContext, IDbContext, IUnitOfWork
             commandType: CommandType.Text);
 
         return results;
-    }
-
-    public async Task<int> Commit()
-    {
-        return await SaveChangesAsync();
-    }
-
-    public new async Task<bool> Dispose()
-    {
-        await DisposeAsync();
-        return true;
     }
 }

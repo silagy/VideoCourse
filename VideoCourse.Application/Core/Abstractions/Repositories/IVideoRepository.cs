@@ -20,4 +20,10 @@ public interface IVideoRepository : IRepository<Video>
     Task<ErrorOr<Note>> AddNote(Note note);
     Task<ErrorOr<Question>> AddQuestion(Question question);
     Task<ErrorOr<Video>> GetVideoWithAllContentById(Guid id);
+    Task<IEnumerable<Video>> GetVideosByParameters(Guid? creatorId, DateTime? startDate, DateTime? endDate, int page,
+        int pageLimit);
+
+    Task<ErrorOr<Section>> UpdateSection(Section section);
+
+    Task<int?> GetTotalVideos();
 }

@@ -1,16 +1,35 @@
 ﻿using System.Linq.Expressions;
-using VideoCourse.Application.Core.Abstractions.Data;
 using VideoCourse.Domain.Entities;
 
 namespace VideoCourse.Infrastructure.Specifications;
 
-public abstract class Specification<TEntity> : ISpecification<TEntity>
+public abstract class Specification<TEntity>
 where TEntity : Entity
 {
-    public abstract Expression<Func<TEntity, bool>> ToExpression();
+    protected Specification(Expression<Func<TEntity, bool>> criteria)
+    {
+        Criteria = criteria;
+    }
+    public Expression<Func<TEntity, bool>>? Criteria { get; private set; }
 
-    internal bool IsSatisfiedBy(TEntity entity) => ToExpression().Compile()(entity);
+    public List<Expression<Func<TEntity, object>>> Includes { get; } = new();
+    
+    public Expression<Func<TEntity, object>>? OrderByCriteria { get; private set; }
+    
+    public Expression<Func<TEntity, object>>? OrderByDescendingCriteria { get; private set; }
 
-    public static implicit operator Expression<Func<TEntity, bool>>(Specification<TEntity> specification) =>
-        specification.ToExpression();
+    protected void AddInclude(Expression<Func<TEntity, object>> include)
+    {
+        Includes.Add(include);
+    }
+
+    protected void OrderBy(Expression<Func<TEntity, object>> orderBy)
+    {
+        OrderByCriteria = orderBy;
+    }
+
+    protected void OrderByDescending(Expression<Func<TEntity, object>> orderByDescending)
+    {
+        OrderByDescendingCriteria = orderByDescending;
+    }
 }
