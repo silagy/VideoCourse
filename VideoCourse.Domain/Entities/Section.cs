@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using VideoCourse.Domain.DomainErrors;
 using VideoCourse.Domain.ValueObjects;
 
 namespace VideoCourse.Domain.Entities;
@@ -43,9 +44,7 @@ public class Section : Entity
     {
         if (startTime.Equals(endTime) || startTime.Value > endTime.Value)
         {
-            return Error.Validation(
-                code: "StartTime.IsEqualOrGreaterThanEndTime",
-                description: $"The start time must be less than end time {endTime}");
+            return CustomErrors.Section.IsEqualOrGreaterThanEndTime(endTime.Value);
         }
         return new Section(id, name, description, startTime, endTime, videoId);
     }
@@ -58,9 +57,7 @@ public class Section : Entity
     {
         if (startTime.Equals(endTime) || startTime.Value > endTime.Value)
         {
-            return Error.Validation(
-                code: "StartTime.IsEqualOrGreaterThanEndTime",
-                description: $"The start time must be less than end time {endTime}");
+            return CustomErrors.Section.IsEqualOrGreaterThanEndTime(endTime.Value);
         }
 
         Name = name;

@@ -2,7 +2,7 @@
 
 public abstract class ValueObject
 {
-    public abstract IEnumerable<object> GetAtomicValues();
+    private protected abstract IEnumerable<object> GetAtomicValues();
 
     public bool Equals(ValueObject? other)
     {

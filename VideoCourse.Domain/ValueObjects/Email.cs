@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ErrorOr;
+using VideoCourse.Domain.DomainErrors;
 using VideoCourse.Domain.Primitives;
+using VideoCourse.Domain.Shared;
 
 namespace VideoCourse.Domain.ValueObjects;
 
@@ -12,7 +14,8 @@ public sealed class Email : ValueObject
     {
         Value = value;
     }
-    public override IEnumerable<object> GetAtomicValues()
+
+    private protected override IEnumerable<object> GetAtomicValues()
     {
         yield return Value;
     }
@@ -20,15 +23,12 @@ public sealed class Email : ValueObject
     public static ErrorOr<Email> Create(string value)
     {
         var email = new EmailAddressAttribute();
-        if (!email.IsValid(value))
-        {
-            return Error.Validation(
-                code: "Email.IsNotValidEmail",
-                description: $"The provided {value} is not a valid email");
-        }
-
-        return new Email(value);
-
+        return ErrorOr.ErrorOr.From(value)
+            .Ensure(e => !string.IsNullOrEmpty(e),
+                CustomErrors.Entity.EntityNotNull)
+            .Ensure(e => email.IsValid(e),
+            CustomErrors.Email.EmailNotValid(value))
+            .Map(e => new Email(e));
     }
 
     public static implicit operator string(Email email) => email.Value;

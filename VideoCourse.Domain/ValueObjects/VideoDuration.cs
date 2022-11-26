@@ -1,5 +1,7 @@
 ﻿using ErrorOr;
+using VideoCourse.Domain.DomainErrors;
 using VideoCourse.Domain.Primitives;
+using VideoCourse.Domain.Shared;
 
 namespace VideoCourse.Domain.ValueObjects;
 
@@ -12,21 +14,20 @@ public sealed class Duration : ValueObject
     {
         Value = value;
     }
-    public override IEnumerable<object> GetAtomicValues()
+
+    private protected override IEnumerable<object> GetAtomicValues()
     {
         yield return Value;
     }
 
     public static ErrorOr<Duration> Create(int value)
     {
-        if (value < MinDuration)
-        {
-            return Error.Validation(
-                code: "Duration.IsNotPositive",
-                description: $"The duration max be greater than {MinDuration}");
-        }
+        ErrorOr<int> duration = value;
 
-        return new Duration(value);
+        return duration
+            .Ensure(d => d < MinDuration,
+                CustomErrors.Duration.DurationIsNotPositive(MinDuration))
+            .Map(d => new Duration(duration.Value));
     }
 
     public static ErrorOr<Duration> Create(string value)

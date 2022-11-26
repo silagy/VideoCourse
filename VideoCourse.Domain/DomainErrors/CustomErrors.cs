@@ -13,6 +13,10 @@ public static class CustomErrors
         public static Error EntityNotFound => Error.NotFound(
             code: "Entity.NotFound",
             description: "Entity not found");
+        
+        public static Error EntityNotNull => Error.NotFound(
+            code: "Entity.NotNullOrEmpty",
+            description: "Entity cannot be null or empty");
     }
 
     public static class User
@@ -57,11 +61,43 @@ public static class CustomErrors
             description:"The video is already published");
     }
     
+    public static class Section
+    {
+        public static Error IsEqualOrGreaterThanEndTime(int endTime) => Error.Validation(
+            code: "StartTime.IsEqualOrGreaterThanEndTime",
+            description: $"The start time must be less than end time {endTime}");
+    }
+    
     public static class Question
     {
         public static Error MultipleAnswersSingleSelectionMustHaveOneRightAnswer => Error.Failure(
             code: "Question.MultipleAnswersSingleSelectionMustHaveOnlyOneRightAnswer",
             description: "Question of type multiple answers with single section must have only one right answer");
         
+    }
+
+    public static class Email
+    {
+        public static Error EmailNotValid(string value) => Error.Validation(
+            code: "Email.IsNotValidEmail",
+            description: $"The provided {value} is not a valid email");
+    }
+    
+    public static class Duration
+    {
+        public static Error DurationIsNotPositive(int minDuration) => Error.Validation(
+        code: "Duration.IsNotPositive",
+        description: $"The duration max be greater than {minDuration}");
+    }
+    
+    public static class Url
+    {
+        public static Error NotValidUrl => Error.Validation(
+            code: "Value.IsNotUrl",
+            description: "The provided value is not URL");
+        
+        public static Error TooShort(int minLength) => Error.Validation(
+            code: "VideoUrl.IsToShort",
+            description: $"The video url must be more then {minLength}");
     }
 }
