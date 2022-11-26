@@ -1,5 +1,7 @@
 ﻿using ErrorOr;
+using VideoCourse.Domain.DomainErrors;
 using VideoCourse.Domain.Primitives;
+using VideoCourse.Domain.Shared;
 
 namespace VideoCourse.Domain.ValueObjects;
 
@@ -17,23 +19,17 @@ public sealed class VideoUrl : ValueObject
     public static ErrorOr<VideoUrl> Create(string value)
     {
         // Check if value is valid URL
-        if (!Uri.IsWellFormedUriString(value, UriKind.RelativeOrAbsolute))
-        {
-            return Error.Validation(
-                code: "Value.IsNotUrl",
-                description: "The provided value is not URL");
-        }
-
-        if (value.Length < MinLength)
-        {
-            return Error.Validation(
-                code: "VideoUrl.IsToShort",
-                description: $"The video url must be more then {MinLength}");
-        }
-
-        return new VideoUrl(value);
+        ErrorOr<string> url = value;
+        return url
+            .Ensure(u => Uri.IsWellFormedUriString(u, UriKind.RelativeOrAbsolute),
+                CustomErrors.Url.NotValidUrl)
+            .Ensure(u => u.Length < MinLength,
+                CustomErrors.Url.TooShort(MinLength))
+            .Map(u => new VideoUrl(u));
+        
     }
-    public override IEnumerable<object> GetAtomicValues()
+
+    private protected override IEnumerable<object> GetAtomicValues()
     {
         yield return Value;
     }

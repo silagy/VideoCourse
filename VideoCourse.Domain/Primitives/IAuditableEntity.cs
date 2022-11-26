@@ -2,6 +2,6 @@
 
 public interface IAuditableEntity
 {
-    public DateTime CreationDate { get;  set; }
+   public DateTime CreationDate { get;  set; }
    public DateTime UpdateDate { get; set; }
 }

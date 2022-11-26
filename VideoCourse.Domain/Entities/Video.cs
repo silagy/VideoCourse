@@ -10,7 +10,7 @@ public class Video : AggregateRoot
 {
     public VideoUrl Url { get; private set; }
     public string Name { get; private set; }
-    public bool IsDeleted { get; set; } = false;
+    public new bool IsDeleted { get; set; } = false;
     public string? Description { get; private set; }
     public Duration Duration { get; set; }
     public Guid CreatorId { get; private set; }
@@ -18,7 +18,7 @@ public class Video : AggregateRoot
     public bool IsPublished { get; private set; }
     public DateTime? PublishedOnUtc { get; private set; }
     public User Creator { get; set; } = null!;
-    
+
     // List of sections
     private List<Section> _sections { get; set; } = new();
     public IReadOnlyCollection<Section> Sections => _sections;
@@ -29,19 +29,18 @@ public class Video : AggregateRoot
     private List<Question> _questions { get; set; } = new();
     public IReadOnlyCollection<Question> Questions => _questions;
 
-    
 
-    protected Video(): base()
+    protected Video() : base()
     {
     }
-    
+
     public Video(
         Guid id,
         VideoUrl url,
         string name,
         string? description,
         Duration duration,
-        Guid creatorId) 
+        Guid creatorId)
         : base(id)
     {
         Url = url;
@@ -50,7 +49,7 @@ public class Video : AggregateRoot
         Duration = duration;
         CreatorId = creatorId;
         IsPublished = false;
-        
+
         RaiseDomainEvent(new VideoCreatedDomainEvent(id));
     }
 
@@ -58,7 +57,7 @@ public class Video : AggregateRoot
     {
         IsPublished = true;
         PublishedOnUtc = publishedDate;
-        
+
         RaiseDomainEvent(new PublishedVideoDomainEvent(Id));
     }
 
@@ -90,7 +89,7 @@ public class Video : AggregateRoot
                 return CustomErrors.Video.SectionStartTimeMustBeSequential;
             }
         }
-        
+
         var section = Section.Create(
             id,
             name,
@@ -100,11 +99,12 @@ public class Video : AggregateRoot
             this.Id,
             creationDate,
             updateDate);
+        
         if (section.IsError)
         {
             return section;
         }
-        
+
         _sections.Add(section.Value);
         return section;
     }
@@ -129,13 +129,13 @@ public class Video : AggregateRoot
                 return CustomErrors.Video.SectionStartTimeMustBeSequential;
             }
         }
-        
+
         // Find the section
         var section = Sections.FirstOrDefault(s => s.Id == id);
 
         if (section is not null)
         {
-            var updateSectionRequest =  section.UpdateSection(
+            var updateSectionRequest = section.UpdateSection(
                 name,
                 description,
                 startTime,
@@ -165,25 +165,26 @@ public class Video : AggregateRoot
         {
             return videoTime.Errors;
         }
-        
+
         // Check if there is any other item on the same time
         if (GetAllItems().Any(n => n.Time.Value == videoTime.Value))
         {
             return CustomErrors.Video.ItemExistsOnThatTime;
         }
-        
+
         // Check if the note is greater than the video duration
         if (videoTime.Value > Duration.Value)
         {
             return CustomErrors.Video.ItemIsGreaterThanVideoDuration;
         }
-        
+
         var note = Note.Create(id, name, content, videoTime.Value, Id);
 
-        if(note.IsError)
+        if (note.IsError)
         {
             return note.Errors;
         }
+
         _notes.Add(note.Value);
 
         return note;
@@ -215,11 +216,10 @@ public class Video : AggregateRoot
             questionType);
 
         if (question.IsError) return question.Errors;
-        
+
         _questions.Add(question.Value);
 
         return question;
-
     }
 
     public IReadOnlyCollection<Item> GetAllItems()
@@ -229,24 +229,22 @@ public class Video : AggregateRoot
         items.AddRange(_questions);
         return items.OrderBy(it => it.Time.Value).ToList();
     }
-    
+
     // Set Sections for dapper
     public void SetSections(IEnumerable<Section> sections)
     {
         _sections.AddRange(sections);
     }
-    
+
     // Set Notes for dapper
     public void SetNotes(IEnumerable<Note> notes)
     {
         _notes.AddRange(notes);
     }
-    
+
     //Set questions for dapper
     public void SetQuestions(IEnumerable<Question> questions)
     {
         _questions.AddRange(questions);
     }
-
-
 }
