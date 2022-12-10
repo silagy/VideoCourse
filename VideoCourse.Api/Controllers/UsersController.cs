@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VideoCourse.Application.Users.Commands;
 using VideoCourse.Application.Users.Commands.DeleteUserCommand;
+using VideoCourse.Application.Users.Queries.GetAllRoles;
 using VideoCourse.Application.Users.Queries.GetCreatorsQuery;
 using VideoCourse.Application.Users.Queries.GetUsersQuery;
+using VideoCourse.Domain.Enums;
+using VideoCourse.Infrastructure.Common.Authentication;
 
 namespace VideoCourse.Api.Controllers;
 
@@ -19,6 +22,7 @@ public class UsersController : ApiController
     }
 
     [HttpPost]
+    [HasPermission(Permissions.EditUser)]
     [AllowAnonymous]
     public async Task<IActionResult> Create(CreateUserCommand request)
     {
@@ -30,6 +34,7 @@ public class UsersController : ApiController
     }
 
     [HttpPost]
+    [HasPermission(Permissions.ReadUser)]
     [Route("GetUsersWithParams")]
     public async Task<IActionResult> GetAll(GetUsersQuery request, CancellationToken cancellationToken)
     {
@@ -41,6 +46,7 @@ public class UsersController : ApiController
     }
 
     [HttpDelete]
+    [HasPermission(Permissions.DeleteUser)]
     [Route("{id:Guid}")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
@@ -53,10 +59,22 @@ public class UsersController : ApiController
     }
 
     [HttpGet]
+    [HasPermission(Permissions.ReadUser)]
     [Route("creators")]
     public async Task<IActionResult> GetCreators()
     {
         var request = new GetCreatorsQuery();
+        var response = await _sender.Send(request);
+
+        return Ok(response);
+    }
+
+    [HttpGet]
+    [HasPermission(Permissions.ReadUser)]
+    [Route("roles")]
+    public async Task<IActionResult> GetRoles()
+    {
+        var request = new GetRolesQuery();
         var response = await _sender.Send(request);
 
         return Ok(response);

@@ -23,7 +23,7 @@ public sealed class VideoUrl : ValueObject
         return url
             .Ensure(u => Uri.IsWellFormedUriString(u, UriKind.RelativeOrAbsolute),
                 CustomErrors.Url.NotValidUrl)
-            .Ensure(u => u.Length < MinLength,
+            .Ensure(u => u.Length >= MinLength,
                 CustomErrors.Url.TooShort(MinLength))
             .Map(u => new VideoUrl(u));
         

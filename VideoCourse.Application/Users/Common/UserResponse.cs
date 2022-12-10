@@ -7,5 +7,4 @@ public record UserResponse(
     string FirstName,
     string LastName,
     string Email,
-    UserRole Role,
     string Token);

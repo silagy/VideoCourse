@@ -26,8 +26,8 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
             .NotEmpty().WithError(ValidationErrors.User.PasswordIsRequired)
             .MinimumLength(PasswordMinLength).WithError(ValidationErrors.User.PasswordMinLength);
 
-        RuleFor(u => u.Role)
+        RuleFor(u => u.Roles)
             .NotEmpty().WithError(ValidationErrors.User.RoleIsRequired)
-            .IsInEnum().WithError(ValidationErrors.User.RoleMustBeValidEnum);
+            .ForEach(r => r.IsInEnum().WithError(ValidationErrors.User.RoleMustBeValidEnum));
     }
 }

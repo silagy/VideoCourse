@@ -16,6 +16,9 @@ public interface IVideoRepository : IRepository<Video>
     Task<ErrorOr<bool>> AddSections(IReadOnlyCollection<Section> sections);
     Task<ErrorOr<Section>> GetSectionById(Guid id);
     Task<ErrorOr<bool>> RemoveSection(Section section);
+
+    Task<ErrorOr<bool>> RemoveNote(Note item);
+    Task<ErrorOr<bool>> RemoveQuestion(Question question);
     Task<IEnumerable<Video>> GetVideosByCreatorId(Guid id);
     Task<ErrorOr<Note>> AddNote(Note note);
     Task<ErrorOr<Question>> AddQuestion(Question question);

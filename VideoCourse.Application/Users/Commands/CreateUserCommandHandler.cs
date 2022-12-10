@@ -35,14 +35,19 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Error
             return email.FirstError;
         }
         
+        
+        
         // Create new user instance
         var user = new User(
             Guid.NewGuid(),
             request.FirstName,
             request.LastName,
             email.Value,
-            _passwordHasher.HashPassword(request.Password),
-            request.Role);
+            _passwordHasher.HashPassword(request.Password));
+        
+        // Add roles
+        IEnumerable<Role> roles = await _userRepository.GetRolesById(request.Roles);
+        user.AddRoles(roles);
 
         var results = await _userRepository.Create(user);
 
@@ -59,7 +64,6 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Error
             user.FirstName,
             user.LastName,
             user.Email,
-            user.Role,
             token);
 
         return userToReturn;

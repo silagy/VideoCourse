@@ -14,6 +14,9 @@ public interface IUserRepository : IRepository<User>
     Task<ErrorOr<User>> GetByEmailAsync(Email email);
     Task<ErrorOr<bool>> IsEmailUniqueAsync(Email email);
     Task<IEnumerable<User>> GetUsers(int page, int pageSize, UserRole? role = null);
+    Task<IEnumerable<Role>> GetRolesById(IEnumerable<UserRole> roles);
+    Task<IEnumerable<Role>> GetAllRoles();
     Task<IEnumerable<User>> GetCreators();
     Task<int> GetTotalUsers();
+    Task<HashSet<string>> GetUserPermissionAsync(Guid userId);
 }

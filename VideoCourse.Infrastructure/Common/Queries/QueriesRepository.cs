@@ -24,12 +24,10 @@ public static class QueriesRepository
        first_name as FirstName,
        last_name as LastName,
        email as Email,
-    role_id as RoleId,
     is_deleted as IsDeleted,
     creation_date as CreationDate,
     update_date as UpdateDate from users
-    where (role_id = @RoleID or @RoleId is null)
-    and is_deleted = false
+    where is_deleted = false
     order by creation_date
     limit @PageSize
     offset @Page";
@@ -47,6 +45,11 @@ from users as us
 where us.is_deleted = false
 and us.role_id = 1
 and us.id in(select distinct creator_id from videos)";
+    }
+
+    public static class Roles
+    {
+        public static string GetAllRoles => $"select id as Id, name as Name from roles";
     }
 
    

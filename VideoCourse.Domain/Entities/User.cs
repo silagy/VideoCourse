@@ -1,4 +1,6 @@
-﻿using VideoCourse.Domain.Enums;
+﻿using System.Net.Sockets;
+using ErrorOr;
+using VideoCourse.Domain.Enums;
 using VideoCourse.Domain.Events;
 using VideoCourse.Domain.ValueObjects;
 
@@ -10,8 +12,10 @@ public class User : AggregateRoot
     public string LastName { get; private set; } = null!;
     public Email Email { get; private set; } = null!;
     public string Password { get; private set; } = null!;
-    public int RoleId { get; private set; }
-    public UserRole Role => (UserRole)RoleId;
+
+    private List<Role> _roles { get; set; } = new();
+
+    public IReadOnlyCollection<Role> Roles => _roles;
 
     protected User()
     {
@@ -22,16 +26,21 @@ public class User : AggregateRoot
         string firstName,
         string lastName,
         Email email,
-        string password,
-        UserRole role
+        string password
     ) : base(id)
     {
         FirstName = firstName;
         LastName = lastName;
         Email = email;
         Password = password;
-        RoleId = (int)role;
         
         RaiseDomainEvent(new UserCreatedDomainEvent(id));
+    }
+
+    public ErrorOr<bool> AddRoles(IEnumerable<Role> roles)
+    {
+        // Check if role is already exists
+        _roles.AddRange(roles);
+        return true;
     }
 }

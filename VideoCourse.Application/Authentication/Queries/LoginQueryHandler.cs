@@ -52,7 +52,6 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<UserRespons
             user.FirstName,
             user.LastName,
             user.Email,
-            user.Role,
             token);
 
         return userToReturn;

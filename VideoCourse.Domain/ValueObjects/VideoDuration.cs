@@ -25,7 +25,7 @@ public sealed class Duration : ValueObject
         ErrorOr<int> duration = value;
 
         return duration
-            .Ensure(d => d < MinDuration,
+            .Ensure(d => d >= MinDuration,
                 CustomErrors.Duration.DurationIsNotPositive(MinDuration))
             .Map(d => new Duration(duration.Value));
     }

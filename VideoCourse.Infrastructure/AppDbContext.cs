@@ -54,9 +54,9 @@ public class AppDbContext : DbContext, IDbContext
         return entry.Entity;
     }
 
-    public new async Task<ErrorOr<bool>> Remove<TEntity>(TEntity entity) where TEntity : Entity
+    public async Task<ErrorOr<bool>> Remove<TEntity>(TEntity entity) where TEntity : Entity
     {
-        Set<TEntity>().Remove(entity);
+        var entityEntry = Set<TEntity>().Remove(entity);
         return true;
     }
 

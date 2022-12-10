@@ -1,4 +1,6 @@
-﻿using ErrorOr;
+﻿using System.Security.Cryptography;
+using ErrorOr;
+using VideoCourse.Domain.Enums;
 
 namespace VideoCourse.Domain.DomainErrors;
 
@@ -17,6 +19,10 @@ public static class CustomErrors
         public static Error EntityNotNull => Error.NotFound(
             code: "Entity.NotNullOrEmpty",
             description: "Entity cannot be null or empty");
+
+        public static Error EntityCannotBeDeleted => Error.Failure(
+            code: "Entity.CannotBeDeleted",
+            description: "Error occured while deleting the entity");
     }
 
     public static class User
@@ -67,7 +73,7 @@ public static class CustomErrors
             code: "StartTime.IsEqualOrGreaterThanEndTime",
             description: $"The start time must be less than end time {endTime}");
     }
-    
+
     public static class Question
     {
         public static Error MultipleAnswersSingleSelectionMustHaveOneRightAnswer => Error.Failure(
@@ -99,5 +105,12 @@ public static class CustomErrors
         public static Error TooShort(int minLength) => Error.Validation(
             code: "VideoUrl.IsToShort",
             description: $"The video url must be more then {minLength}");
+    }
+
+    public static class Permission
+    {
+        public static Error PermissionAlreadyExists(Permissions permission) => Error.Validation(
+            code: "Permission.AlreadyExists",
+            description: $"The permission ${permission.ToString()} is already exists");
     }
 }

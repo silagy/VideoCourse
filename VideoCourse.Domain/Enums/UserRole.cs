@@ -2,6 +2,7 @@
 
 public enum UserRole
 {
-    Creator = 1,
-    Learner = 2
+    Admin = 1,
+    UsersManager = 2,
+    VideosCreator = 3
 }

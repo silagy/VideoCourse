@@ -9,7 +9,7 @@ using VideoCourse.Domain.ValueObjects;
 using VideoCourse.Infrastructure.Common;
 using VideoCourse.Infrastructure.Common.Queries;
 
-namespace VideoCourse.Infrastructure.Repositories;
+namespace VideoCourse.Infrastructure.Repositories.Users;
 
 public class UserRepository: GenericRepository<User>, IUserRepository
 {
@@ -56,9 +56,23 @@ public class UserRepository: GenericRepository<User>, IUserRepository
     {
         IEnumerable<User> response = await _dbContext.GetRecordsUsingRawSqlAsync<User>(
             query: QueriesRepository.Users.GetUsersByRoleId,
-            new { RoleId = role, 
-                Page = (page - 1) * pageSize, 
+            new {RoleId = role, Page = (page - 1) * pageSize, 
                 PageSize = pageSize });
+
+        return response;
+    }
+
+    public async Task<IEnumerable<Role>> GetRolesById(IEnumerable<UserRole> roles)
+    {
+        var rolesToReturn = _dbContext.SetNoEntity<Role>().Where(r => roles.Select(role => (int)role).Contains(r.Id));
+        return rolesToReturn;
+    }
+
+    public async Task<IEnumerable<Role>> GetAllRoles()
+    {
+        IEnumerable<Role> response = await _dbContext.GetRecordsUsingRawSqlAsync<Role>(
+            query: QueriesRepository.Roles.GetAllRoles,
+            parameters: new { });
 
         return response;
     }
@@ -75,5 +89,19 @@ public class UserRepository: GenericRepository<User>, IUserRepository
     public async Task<int> GetTotalUsers()
     {
         return await _dbContext.Set<User>().CountAsync();
+    }
+
+    public async Task<HashSet<string>> GetUserPermissionAsync(Guid userId)
+    {
+        HashSet<string> permissions = _dbContext.Set<User>()
+            .Include(u => u.Roles)
+            .ThenInclude(r => r.Permissions)
+            .Where(u => u.Id == userId)
+            .SelectMany(r => r.Roles)
+            .SelectMany(p => p.Permissions)
+            .Select(p => p.Name)
+            .ToHashSet();
+
+        return permissions;
     }
 }

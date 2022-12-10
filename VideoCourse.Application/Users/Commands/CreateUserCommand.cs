@@ -5,4 +5,4 @@ using VideoCourse.Domain.Enums;
 
 namespace VideoCourse.Application.Users.Commands;
 
-public record CreateUserCommand(string FirstName, string LastName, string Email, string Password, UserRole Role) : IRequest<ErrorOr<UserResponse>>;
+public record CreateUserCommand(string FirstName, string LastName, string Email, string Password, IEnumerable<UserRole> Roles) : IRequest<ErrorOr<UserResponse>>;

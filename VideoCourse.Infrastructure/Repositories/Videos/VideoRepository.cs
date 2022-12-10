@@ -108,6 +108,17 @@ public class VideoRepository : GenericRepository<Video>, IVideoRepository
         return await _dbContext.Remove(section);
     }
 
+    public async Task<ErrorOr<bool>> RemoveNote(Note item)
+    {
+        _dbContext.Set<Note>().Attach(item);
+        return await _dbContext.Remove(item);
+    }
+    
+    public async Task<ErrorOr<bool>> RemoveQuestion(Question question)
+    {
+        return await _dbContext.Remove(question);
+    }
+
     public async Task<IEnumerable<Video>> GetVideosByCreatorId(Guid id)
     {
         var results = await _dbContext.GetRecordsUsingRawSqlAsync<Video>(

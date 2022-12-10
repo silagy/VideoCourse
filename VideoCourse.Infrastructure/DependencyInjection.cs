@@ -1,7 +1,9 @@
 ﻿using System.Text;
 using Dapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -15,10 +17,12 @@ using VideoCourse.Application.Core.Abstractions.Emails;
 using VideoCourse.Application.Core.Abstractions.Repositories;
 using VideoCourse.Infrastructure.BackgroundJobs;
 using VideoCourse.Infrastructure.Common;
+using VideoCourse.Infrastructure.Common.Authentication;
 using VideoCourse.Infrastructure.Common.Cryptography;
 using VideoCourse.Infrastructure.Common.DapperSqlCasting;
 using VideoCourse.Infrastructure.Interceptors;
 using VideoCourse.Infrastructure.Repositories;
+using VideoCourse.Infrastructure.Repositories.Users;
 using VideoCourse.Infrastructure.Services.Emails;
 
 namespace VideoCourse.Infrastructure;
@@ -67,17 +71,19 @@ public static class DependencyInjection
         });
         
         services.AddScoped<IDbContext>(serviceProvider => serviceProvider.GetService<AppDbContext>()!);
-        //services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetService<AppDbContext>()!);
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddTransient<IPasswordHasher, PasswordHasher>();
         services.AddTransient<IPasswordHashChecker, PasswordHasher>();
         services.AddTransient<IDateTime, DateTimeProvider>();
         services.AddScoped<IEmailService, EmailService>();
-       
-        services.AddScoped<IUserRepository, UserRepository>();
+
+        services.AddScoped<UserRepository>();
+        services.AddScoped<IUserRepository, CachedUserRepository>();
+        services.AddSingleton<IMemoryCache, MemoryCache>();
         services.AddScoped<IVideoRepository, VideoRepository>();
 
         services.AddAuth(configuration);
+        services.IncludeAuthorization();
         return services;
     }
 
@@ -106,6 +112,16 @@ public static class DependencyInjection
                     Encoding.UTF8.GetBytes(jwtSettings.Secret))
             });
         
+        return services;
+    }
+
+    private static IServiceCollection IncludeAuthorization(
+        this IServiceCollection services)
+    {
+        services.AddAuthorization();
+        services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
+
         return services;
     }
 }
