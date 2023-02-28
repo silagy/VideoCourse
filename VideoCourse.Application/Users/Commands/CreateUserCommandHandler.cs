@@ -46,8 +46,11 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Error
             _passwordHasher.HashPassword(request.Password));
         
         // Add roles
-        IEnumerable<Role> roles = await _userRepository.GetRolesById(request.Roles);
-        user.AddRoles(roles);
+        if (request.Roles.Any())
+        {
+            IEnumerable<Role> roles = await _userRepository.GetRolesById(request.Roles);
+            user.AddRoles(roles);
+        }
 
         var results = await _userRepository.Create(user);
 

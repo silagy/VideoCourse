@@ -11,10 +11,10 @@ namespace VideoCourse.Infrastructure.Repositories.Users;
 
 public class CachedUserRepository : IUserRepository
 {
-    private readonly UserRepository _decorator;
+    private readonly IUserRepository _decorator;
     private readonly IMemoryCache _memoryCache;
 
-    public CachedUserRepository(UserRepository decorator, IMemoryCache memoryCache)
+    public CachedUserRepository(IUserRepository decorator, IMemoryCache memoryCache)
     {
         _decorator = decorator;
         _memoryCache = memoryCache;
@@ -33,6 +33,7 @@ public class CachedUserRepository : IUserRepository
     public Task<ErrorOr<User>> Create(User user) => _decorator.Create(user);
 
     public Task<ErrorOr<User?>> GetByIdAsync(Guid id) => _decorator.GetByIdAsync(id);
+    public Task<ErrorOr<User?>> GetByIdWithRolesAsync(Guid id) => _decorator.GetByIdWithRolesAsync(id);
 
     public Task<ErrorOr<User>> GetByEmailAsync(Email email) => _decorator.GetByEmailAsync(email);
 
@@ -56,6 +57,11 @@ public class CachedUserRepository : IUserRepository
             });
 
         return result ?? new List<Role>();
+    }
+
+    public Task<IEnumerable<Role>> GetRolesByIds(List<int> Ids)
+    {
+        return _decorator.GetRolesByIds(Ids);
     }
 
     public Task<IEnumerable<User>> GetCreators() => _decorator.GetCreators();

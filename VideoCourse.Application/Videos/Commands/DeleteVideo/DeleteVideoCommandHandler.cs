@@ -2,6 +2,7 @@
 using MediatR;
 using VideoCourse.Application.Core.Abstractions.Data;
 using VideoCourse.Application.Core.Abstractions.Repositories;
+using VideoCourse.Domain.Events;
 
 namespace VideoCourse.Application.Videos.Commands.DeleteVideo;
 
@@ -26,7 +27,9 @@ public class DeleteVideoCommandHandler : IRequestHandler<DeleteVideoCommand, Err
             return videoResult.Errors;
         }
 
-        var operationResult = await _repository.Remove(videoResult.Value);
+        var video = videoResult.Value;
+        video.DeleteVideo();
+        var operationResult = await _repository.Remove(video);
         await _unitOfWork.Commit();
 
         return operationResult;

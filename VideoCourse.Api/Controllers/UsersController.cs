@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VideoCourse.Application.Users.Commands;
+using VideoCourse.Application.Users.Commands.AssignUserRolesCommand;
 using VideoCourse.Application.Users.Commands.DeleteUserCommand;
 using VideoCourse.Application.Users.Queries.GetAllRoles;
 using VideoCourse.Application.Users.Queries.GetCreatorsQuery;
@@ -78,5 +79,18 @@ public class UsersController : ApiController
         var response = await _sender.Send(request);
 
         return Ok(response);
+    }
+
+    [HttpPost]
+    [HasPermission(Permissions.EditUser)]
+    [Route("roles")]
+    public async Task<IActionResult> AssignUserRoles(AssignUserRolesCommand request,
+        CancellationToken cancellationToken)
+    {
+        var response = await _sender.Send(request, cancellationToken);
+
+        return response.Match(
+            user => Ok(user),
+            errors => Problem(errors));
     }
 }

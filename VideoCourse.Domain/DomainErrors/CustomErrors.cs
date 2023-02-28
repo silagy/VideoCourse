@@ -38,6 +38,16 @@ public static class CustomErrors
         public static Error UserPasswordInCorrect => Error.Failure(
             code: "User.PasswordInCorrect",
             description: "User password incorrect");
+
+        
+        
+    }
+
+    public static class Role
+    {
+        public static Error RolesNotFound => Error.Failure(
+            code: "User.RolesNotFound",
+            description: "Roles not found");
     }
 
     public static class Video

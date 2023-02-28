@@ -35,6 +35,8 @@ public class EmailService : IEmailService
                 Text = emailMessage.Body
             }
         };
+        
+        // Todo: return false or error when the email is failed to sent
         int port = int.Parse(_mailSettings.SmtpPort);
         using var smtpClient = new SmtpClient();
         await smtpClient.ConnectAsync(_mailSettings.SmtpServer, port, true);

@@ -8,6 +8,7 @@ using VideoCourse.Domain.Enums;
 using VideoCourse.Domain.ValueObjects;
 using VideoCourse.Infrastructure.Common;
 using VideoCourse.Infrastructure.Common.Queries;
+using VideoCourse.Infrastructure.Specifications;
 
 namespace VideoCourse.Infrastructure.Repositories.Users;
 
@@ -33,6 +34,17 @@ public class UserRepository: GenericRepository<User>, IUserRepository
     public Task<ErrorOr<User?>> GetByIdAsync(Guid id)
     {
         return _dbContext.GetByIdAsync<User>(id);
+    }
+
+    public async Task<ErrorOr<User?>> GetByIdWithRolesAsync(Guid id)
+    {
+        User? user = await _dbContext.Set<User>()
+            .AddSpecification(new GetUserByIdWithRoles(id))
+            .FirstOrDefaultAsync();
+
+        if (user is null) return CustomErrors.User.UserNotFound;
+
+        return user;
     }
 
     public async Task<ErrorOr<User>> GetByEmailAsync(Email email)
@@ -73,6 +85,15 @@ public class UserRepository: GenericRepository<User>, IUserRepository
         IEnumerable<Role> response = await _dbContext.GetRecordsUsingRawSqlAsync<Role>(
             query: QueriesRepository.Roles.GetAllRoles,
             parameters: new { });
+
+        return response;
+    }
+
+    public async Task<IEnumerable<Role>> GetRolesByIds(List<int> Ids)
+    {
+        IEnumerable<Role> response = await _dbContext.GetRecordsUsingRawSqlAsync<Role>(
+            query: QueriesRepository.Roles.GetRolesByIds,
+            parameters: new { Ids = Ids.ToArray()});
 
         return response;
     }

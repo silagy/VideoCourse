@@ -39,8 +39,9 @@ public class User : AggregateRoot
 
     public ErrorOr<bool> AddRoles(IEnumerable<Role> roles)
     {
-        // Check if role is already exists
+        _roles.Clear();
         _roles.AddRange(roles);
+        
         return true;
     }
 }

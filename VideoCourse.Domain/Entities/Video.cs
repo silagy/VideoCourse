@@ -61,6 +61,11 @@ public class Video : AggregateRoot
         RaiseDomainEvent(new PublishedVideoDomainEvent(Id));
     }
 
+    public void DeleteVideo()
+    {
+        RaiseDomainEvent(new VideoDeletedDomainEvent(Id));
+    }
+
     public void UpdateVideoDetails(string name, string? description)
     {
         Name = name;

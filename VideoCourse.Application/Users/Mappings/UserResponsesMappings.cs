@@ -12,5 +12,9 @@ public class UserResponsesMappings : IRegister
             .Map(dest => dest.Email, src => src.Email.Value);
         config.NewConfig<User, BasicUserResponse>()
             .Map(dest => dest.Email, src => src.Email.Value);
+
+        config.NewConfig<User, UserFullResponse>()
+            .Map(dest => dest.Email, src => src.Email.Value)
+            .Map(dest => dest.Roles, src => src.Roles);
     }
 }

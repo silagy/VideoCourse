@@ -50,6 +50,8 @@ and us.id in(select distinct creator_id from videos)";
     public static class Roles
     {
         public static string GetAllRoles => $"select id as Id, name as Name from roles";
+
+        public static string GetRolesByIds => $"select id as Id, name as Name from roles where id = ANY(@Ids)";
     }
 
    

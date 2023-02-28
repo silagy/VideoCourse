@@ -77,8 +77,9 @@ public static class DependencyInjection
         services.AddTransient<IDateTime, DateTimeProvider>();
         services.AddScoped<IEmailService, EmailService>();
 
-        services.AddScoped<UserRepository>();
-        services.AddScoped<IUserRepository, CachedUserRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.Decorate<IUserRepository, CachedUserRepository>();
+        
         services.AddSingleton<IMemoryCache, MemoryCache>();
         services.AddScoped<IVideoRepository, VideoRepository>();
 

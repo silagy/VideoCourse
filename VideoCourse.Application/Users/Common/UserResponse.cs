@@ -1,4 +1,5 @@
-﻿using VideoCourse.Domain.Enums;
+﻿using VideoCourse.Domain.Entities;
+using VideoCourse.Domain.Enums;
 
 namespace VideoCourse.Application.Users.Common;
 
@@ -8,3 +9,5 @@ public record UserResponse(
     string LastName,
     string Email,
     string Token);
+    
+    
