@@ -24,6 +24,7 @@ using VideoCourse.Infrastructure.Interceptors;
 using VideoCourse.Infrastructure.Repositories;
 using VideoCourse.Infrastructure.Repositories.Users;
 using VideoCourse.Infrastructure.Services.Emails;
+using StackExchange.Redis;
 
 namespace VideoCourse.Infrastructure;
 
@@ -39,6 +40,13 @@ public static class DependencyInjection
         SqlMapper.AddTypeHandler(new VideoUrlHandler());
         SqlMapper.AddTypeHandler(new DurationHandler());
         SqlMapper.AddTypeHandler(new EmailDapperConvertHandler());
+        
+        // Adding caching
+        services.AddStackExchangeRedisCache(con =>
+        {
+            var connectionString = configuration.GetConnectionString("Redis");
+            con.Configuration = connectionString;
+        });
 
         services.AddQuartz(quartzConfigurator =>
         {

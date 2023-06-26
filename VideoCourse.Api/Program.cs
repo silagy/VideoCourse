@@ -1,3 +1,5 @@
+using Carter;
+using VideoCourse.Api.Middlewares;
 using VideoCourse.Application;
 using VideoCourse.Infrastructure;
 
@@ -7,12 +9,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
 
+// Add Carter
+builder.Services.AddCarter();
+builder.Services.AddCors();
+
+builder.Services.AddTransient<IProblemDetailsWriter, CustomProblemDetailsWriter>();
+
 //builder.Services.AddTransient<GlobalExceptionMiddleware>();
 
-builder.Services.AddControllers();
+//builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
@@ -34,7 +43,9 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseExceptionHandler("/error");
+app.MapCarter();
+//app.CustomProblemDetails();
 //app.UseMiddleware<GlobalExceptionMiddleware>();
-app.MapControllers();
+//app.MapControllers();
 
 app.Run();

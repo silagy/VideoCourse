@@ -1,0 +1,21 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  video-course.api:
+    build:
+      context: "C:\\Development Projects\\VideoCourse"
+      dockerfile: "VideoCourse.Api/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net7.0/VideoCourse.Api.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "https://+:443;http://+:80"
+    image: "video-course.api:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\adis\\AppData\\Roaming\\ASP.NET\\Https:/root/.aspnet/https"
+    - "C:\\Users\\adis\\AppData\\Roaming\\Microsoft\\UserSecrets:/root/.microsoft/usersecrets"
+    - "C:\\Development Projects\\VideoCourse\\VideoCourse.Api:/app:rw"
+    working_dir: "/app"
