@@ -9,33 +9,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="27b477af-d23c-4e8c-baee-3675acc726bf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.VideoCourse/.idea/aws.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/VideoCourse.Api/Authentication/AuthenticationModule.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/VideoCourse.Api/Core/Common/ErrorsToProblemDetails.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/VideoCourse.Api/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/VideoCourse.Api/Middlewares/CustomProblemDetailsMiddleware.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/VideoCourse.Api/Middlewares/CustomProblemDetailsWriter.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/VideoCourse.Api/Users/UsersModule.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/VideoCourse.Api/Vidoes/VideosModule.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/VideoCourse.Infrastructure/VideoCourse.Api/obj/.EntityFrameworkCore.targets" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.VideoCourse/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VideoCourse.Api/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/VideoCourse.Api/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VideoCourse.Api/VideoCourse.Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/VideoCourse.Api/VideoCourse.Api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VideoCourse.Api/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/VideoCourse.Api/appsettings.Development.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VideoCourse.Api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/VideoCourse.Api/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VideoCourse.Application/VideoCourse.Application.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/VideoCourse.Application/VideoCourse.Application.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VideoCourse.Domain/VideoCourse.Domain.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/VideoCourse.Domain/VideoCourse.Domain.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VideoCourse.Infrastructure/Common/Queries/QueriesRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/VideoCourse.Infrastructure/Common/Queries/QueriesRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VideoCourse.Infrastructure/DependencyInjection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/VideoCourse.Infrastructure/DependencyInjection.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VideoCourse.Infrastructure/Migrations/20221209072403_InitialMigration.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VideoCourse.Infrastructure/Migrations/20221209072403_InitialMigration.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VideoCourse.Infrastructure/Migrations/AppDbContextModelSnapshot.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VideoCourse.Infrastructure/Repositories/Users/CachedUserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/VideoCourse.Infrastructure/Repositories/Users/CachedUserRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VideoCourse.Infrastructure/Repositories/Users/UserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/VideoCourse.Infrastructure/Repositories/Users/UserRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VideoCourse.Infrastructure/Repositories/Videos/VideoRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/VideoCourse.Infrastructure/Repositories/Videos/VideoRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VideoCourse.Infrastructure/VideoCourse.Infrastructure.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/VideoCourse.Infrastructure/VideoCourse.Infrastructure.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VideoCourse.sln" beforeDir="false" afterPath="$PROJECT_DIR$/VideoCourse.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.VideoCourse/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VideoCourse/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,6 +48,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "Migrating__into__minimal__APIs",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -205,7 +180,8 @@
       <workItem from="1687550074385" duration="5588000" />
       <workItem from="1687654254404" duration="1827000" />
       <workItem from="1687692855981" duration="5395000" />
-      <workItem from="1687727834429" duration="10416000" />
+      <workItem from="1687727834429" duration="10582000" />
+      <workItem from="1687792461265" duration="644000" />
     </task>
     <servers />
   </component>
