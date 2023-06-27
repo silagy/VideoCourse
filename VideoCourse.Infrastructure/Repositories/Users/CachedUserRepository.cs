@@ -1,5 +1,7 @@
 ﻿using ErrorOr;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 using VideoCourse.Application.Core.Abstractions.Data;
 using VideoCourse.Application.Core.Abstractions.Repositories;
 using VideoCourse.Domain.Entities;
@@ -12,12 +14,12 @@ namespace VideoCourse.Infrastructure.Repositories.Users;
 public class CachedUserRepository : IUserRepository
 {
     private readonly IUserRepository _decorator;
-    private readonly IMemoryCache _memoryCache;
+    private readonly IDistributedCache _distributedCache;
 
-    public CachedUserRepository(IUserRepository decorator, IMemoryCache memoryCache)
+    public CachedUserRepository(IUserRepository decorator, IDistributedCache distributedCache)
     {
         _decorator = decorator;
-        _memoryCache = memoryCache;
+        _distributedCache = distributedCache;
     }
 
     public Task<bool> Remove(User entity) => _decorator.Remove(entity);
@@ -43,20 +45,30 @@ public class CachedUserRepository : IUserRepository
         _decorator.GetUsers(page, pageSize, role);
 
     public Task<IEnumerable<Role>> GetRolesById(IEnumerable<UserRole> roles) => _decorator.GetRolesById(roles);
-    
+
     public async Task<IEnumerable<Role>> GetAllRoles()
     {
         string key = $"roles";
+        IEnumerable<Role> rolesData;
+        string? cachedValue = await _distributedCache.GetStringAsync(key);
 
-        var result = await _memoryCache.GetOrCreateAsync(
-            key,
-            entry =>
+        if (string.IsNullOrEmpty(cachedValue))
+        {
+            var roles = await _decorator.GetAllRoles();
+
+            if (roles.Any())
             {
-                entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
-                return _decorator.GetAllRoles();
-            });
+                await _distributedCache.SetStringAsync(
+                    key,
+                    JsonConvert.SerializeObject(roles));
+                return await Task.FromResult(roles);
+            }
+        }
 
-        return result ?? new List<Role>();
+        return JsonConvert.DeserializeObject<IEnumerable<Role>>(cachedValue);
+
+
+        return new List<Role>();
     }
 
     public Task<IEnumerable<Role>> GetRolesByIds(List<int> Ids)
@@ -66,21 +78,47 @@ public class CachedUserRepository : IUserRepository
 
     public Task<IEnumerable<User>> GetCreators() => _decorator.GetCreators();
 
-    public Task<int> GetTotalUsers() => _decorator.GetTotalUsers();
+    public async Task<int> GetTotalUsers()
+    {
+        var key = $"total-users";
+
+        string? cachedKey = await _distributedCache.GetStringAsync(key);
+
+        if (string.IsNullOrEmpty(cachedKey))
+        {
+            int totalUsers = await _decorator.GetTotalUsers();
+            await _distributedCache.SetStringAsync(
+                key,
+                JsonConvert.SerializeObject(totalUsers));
+
+            return totalUsers;
+        }
+
+        return JsonConvert.DeserializeObject<int>(cachedKey);
+    }
 
     public async Task<HashSet<string>> GetUserPermissionAsync(Guid userId)
     {
         string key = $"user-permissions-{userId}";
 
-        var result = await _memoryCache.GetOrCreateAsync(
-            key,
-            entry =>
-            {
-                entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
+        string? userPermissionsKey = await _distributedCache.GetStringAsync(key);
 
-                return _decorator.GetUserPermissionAsync(userId);
-            });
+        if (string.IsNullOrEmpty(userPermissionsKey))
+        {
+            var userPermissions = await _decorator.GetUserPermissionAsync(userId);
+            await _distributedCache.SetStringAsync(
+                key,
+                JsonConvert.SerializeObject(userPermissions));
 
-        return result ?? new HashSet<string>();
+            return userPermissions;
+        }
+        else
+        {
+            var cachedUserPermissions =
+                JsonConvert.DeserializeObject<HashSet<string>>(await _distributedCache.GetStringAsync(key));
+            return cachedUserPermissions;
+        }
+
+        return new HashSet<string>();
     }
 }

@@ -32,18 +32,19 @@ public static class QueriesRepository
     limit @PageSize
     offset @Page";
         
-        public static string GetCreators => @"select
+        public static string GetCreators => $@"select
     id as Id,
        first_name as FirstName,
        last_name as LastName,
        email as Email,
-    role_id as RoleId,
-    is_deleted as IsDeleted,
-    creation_date as CreationDate,
-    update_date as UpdateDate
+        role_id as RoleId,
+        is_deleted as IsDeleted,
+        creation_date as CreationDate,
+        update_date as UpdateDate
 from users as us
+inner join user_roles ur on us.id = ur.user_id
 where us.is_deleted = false
-and us.role_id = 1
+and ur.role_id = 1
 and us.id in(select distinct creator_id from videos)";
     }
 

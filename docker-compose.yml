@@ -1,0 +1,35 @@
+﻿services:
+  db:
+    image: postgres
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_USER: postgres
+      POSTGRES_DB: VideoCourseDb
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+    ports: 
+      - "5433:5432"
+    networks:
+      back-end:
+    
+  
+  video-course.api:
+    image: video-course.api
+    container_name: web
+    build:
+      context: .
+      dockerfile: VideoCourse.Api/Dockerfile
+    depends_on: [db]
+    ports:
+      - "8080:80"
+    networks:
+      back-end:
+
+volumes: 
+  db-data:
+    
+networks:
+  back-end:
+    driver: bridge

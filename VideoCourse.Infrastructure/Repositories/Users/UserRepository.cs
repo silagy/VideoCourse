@@ -77,7 +77,7 @@ public class UserRepository: GenericRepository<User>, IUserRepository
     public async Task<IEnumerable<Role>> GetRolesById(IEnumerable<UserRole> roles)
     {
         var rolesToReturn = _dbContext.SetNoEntity<Role>().Where(r => roles.Select(role => (int)role).Contains(r.Id));
-        return rolesToReturn;
+        return await Task.FromResult(rolesToReturn);
     }
 
     public async Task<IEnumerable<Role>> GetAllRoles()
@@ -123,6 +123,6 @@ public class UserRepository: GenericRepository<User>, IUserRepository
             .Select(p => p.Name)
             .ToHashSet();
 
-        return permissions;
+        return await Task.FromResult(permissions);
     }
 }

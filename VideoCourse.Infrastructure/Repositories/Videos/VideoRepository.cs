@@ -73,7 +73,7 @@ public class VideoRepository : GenericRepository<Video>, IVideoRepository
 
     public async Task<ErrorOr<Section>> AddSection(Section section)
     {
-        _dbContext.Insert(section);
+        await _dbContext.Insert(section);
         return section;
     }
 

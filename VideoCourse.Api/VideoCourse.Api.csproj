@@ -5,9 +5,12 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>11</LangVersion>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <UserSecretsId>11ff9071-1c7a-415d-8c2e-69a927a7cc35</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Carter" Version="7.1.0" />
     <PackageReference Include="MediatR" Version="11.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -21,6 +24,12 @@
   <ItemGroup>
     <ProjectReference Include="..\VideoCourse.Application\VideoCourse.Application.csproj" />
     <ProjectReference Include="..\VideoCourse.Infrastructure\VideoCourse.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
   </ItemGroup>
 
 </Project>
